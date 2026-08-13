@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Yeltis · Looping product video for Shopify product pages</title>
+<meta name="description" content="Yeltis turns your existing product photography into 4:5 looping video for Shopify product pages. Shopify-ready MP4 files under 1 MB, no app required.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   YELTIS · design tokens
+   Palette is locked to blue / light blue / white.
+   ============================================================ */
+:root{
+  --ink:#071B33;
+  --ink-2:#0E2E52;
+  --ink-3:#16406E;
+  --blue:#1663D8;
+  --blue-deep:#0F49A6;
+  --sky:#57C4F5;
+  --sky-soft:#B9E3FA;
+  --mist:#EAF3FE;
+  --paper:#F7FAFF;
+  --line:#D3E3F7;
+  --line-dark:#1E4477;
+  --white:#FFFFFF;
+  --body:#3B5878;
+
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --text:"Figtree","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+
+  --wrap:1160px;
+  --r:14px;
+  --shadow:0 20px 60px -22px rgba(7,27,51,.34);
+  --shadow-sm:0 6px 22px -10px rgba(7,27,51,.28);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--white);color:var(--ink);
+  font-family:var(--text);font-size:17px;line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+img,video{display:block;max-width:100%}
+a{color:inherit}
+h1,h2,h3,h4{font-family:var(--display);margin:0;line-height:1.06;letter-spacing:-.024em;font-weight:700}
+p{margin:0}
+.wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 24px}
+
+/* --- utility type --- */
+.eyebrow{
+  font-family:var(--mono);font-size:11.5px;font-weight:500;
+  letter-spacing:.17em;text-transform:uppercase;color:var(--blue);
+  display:inline-flex;align-items:center;gap:10px;
+}
+.eyebrow::before{content:"";width:22px;height:1px;background:var(--sky)}
+.eyebrow.on-dark{color:var(--sky)}
+.eyebrow.on-dark::before{background:var(--line-dark)}
+.lead{font-size:19px;color:var(--body);max-width:56ch}
+.tiny{font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;color:#7E97B4;line-height:1.65}
+
+/* --- buttons --- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  font-family:var(--text);font-weight:600;font-size:15.5px;
+  padding:14px 24px;border-radius:10px;border:1px solid transparent;
+  text-decoration:none;cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,background .16s ease;
+}
+.btn-primary{background:var(--blue);color:var(--white);box-shadow:0 10px 24px -10px rgba(22,99,216,.75)}
+.btn-primary:hover{background:var(--blue-deep);transform:translateY(-2px)}
+.btn-ghost{background:var(--white);color:var(--ink);border-color:var(--line)}
+.btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
+.btn-onDark{background:var(--white);color:var(--ink)}
+.btn-onDark:hover{transform:translateY(-2px)}
+.btn-outline-dark{background:transparent;color:var(--white);border-color:var(--line-dark)}
+.btn-outline-dark:hover{border-color:var(--sky);color:var(--sky)}
+.btn-sm{padding:10px 18px;font-size:14.5px}
+:focus-visible{outline:2.5px solid var(--sky);outline-offset:3px;border-radius:6px}
+
+/* ============================================================
+   SIGNATURE: the loop rail.
+   A film-strip hairline with frame ticks and a marker that
+   travels the length of it and starts over. Used as the
+   divider between sections, because the whole product is a
+   thing that ends and starts again without a seam.
+   ============================================================ */
+.rail{position:relative;height:1px;background:var(--line);overflow:visible}
+.rail::before{
+  content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 30px);
+}
+.rail-mark{
+  position:absolute;top:-4px;left:0;width:26px;height:9px;border-radius:5px;
+  background:var(--blue);animation:travel 9s linear infinite;
+}
+.rail.dark{background:var(--line-dark)}
+.rail.dark::before{background:repeating-linear-gradient(90deg,var(--line-dark) 0 10px,transparent 10px 30px)}
+.rail.dark .rail-mark{background:var(--sky)}
+@keyframes travel{0%{left:-3%}100%{left:100%}}
+
+/* --- sections --- */
+.sec{padding:104px 0}
+.sec-head{max-width:720px;margin-bottom:52px}
+.sec-head h2{font-size:clamp(30px,4.1vw,46px);margin:18px 0 16px}
+.dark{background:var(--ink);color:var(--white)}
+.dark .lead{color:#A9C4E0}
+.tint{background:var(--paper)}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav{
+  position:sticky;top:0;z-index:60;background:rgba(255,255,255,.9);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--line);
+}
+.nav-in{display:flex;align-items:center;gap:32px;height:68px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-weight:800;font-size:21px;letter-spacing:-.03em}
+.brand-mark{width:28px;height:28px;flex:none}
+.nav-links{display:flex;gap:26px;margin-left:auto}
+.nav-links a{
+  text-decoration:none;font-size:14.5px;font-weight:500;color:var(--body);
+  padding:6px 0;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;
+}
+.nav-links a:hover{color:var(--blue);border-color:var(--sky)}
+@media(max-width:900px){.nav-links{display:none}.nav-in{gap:16px}.nav .btn{margin-left:auto}}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  position:relative;overflow:hidden;padding:78px 0 96px;
+  background:
+    radial-gradient(900px 520px at 88% 6%,rgba(87,196,245,.20),transparent 62%),
+    radial-gradient(760px 520px at 4% 96%,rgba(22,99,216,.10),transparent 60%),
+    var(--mist);
+}
+.hero-grid{display:grid;grid-template-columns:1.06fr .94fr;gap:64px;align-items:center}
+.hero h1{font-size:clamp(38px,5.5vw,64px);margin:20px 0 22px}
+.hero h1 em{font-style:normal;color:var(--blue);position:relative}
+.hero h1 em::after{
+  content:"";position:absolute;left:0;right:0;bottom:.06em;height:.14em;
+  background:var(--sky);opacity:.5;border-radius:3px;
+}
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin:32px 0 22px}
+.hero-note{display:flex;flex-wrap:wrap;gap:8px 20px;font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;color:var(--ink-3)}
+.hero-note span{display:flex;align-items:center;gap:7px}
+.hero-note span::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--blue)}
+@media(max-width:960px){.hero-grid{grid-template-columns:1fr;gap:48px}}
+
+/* --- the PDP simulator (hero thesis) --- */
+.sim{position:relative;margin:0 auto;width:100%;max-width:352px}
+.sim-toggle{
+  display:flex;padding:4px;background:var(--white);border:1px solid var(--line);
+  border-radius:11px;margin-bottom:16px;box-shadow:var(--shadow-sm);
+}
+.sim-toggle button{
+  flex:1;border:0;background:transparent;cursor:pointer;padding:10px 6px;border-radius:8px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.11em;text-transform:uppercase;
+  color:var(--body);font-weight:500;transition:background .18s,color .18s;
+}
+.sim-toggle button[aria-pressed="true"]{background:var(--ink);color:var(--white)}
+.phone{
+  background:var(--white);border:1px solid var(--line);border-radius:26px;
+  box-shadow:var(--shadow);overflow:hidden;
+}
+.phone-bar{
+  height:34px;display:flex;align-items:center;justify-content:center;gap:6px;
+  border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10px;
+  letter-spacing:.12em;color:#94ABC6;
+}
+.stage{position:relative;aspect-ratio:4/5;background:#0A1A2E;overflow:hidden}
+/* both hero assets are true 4:5, so they fill the well exactly: no crop, no bars */
+.stage > *{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.stage video{opacity:0;transition:opacity .45s ease}
+.sim[data-mode="loop"] .stage video{opacity:1}
+.sim[data-mode="loop"] .stage .still{opacity:0}
+.stage .still{opacity:1;transition:opacity .45s ease}
+.stage-tag{
+  position:absolute;z-index:3;inset:12px auto auto 12px;width:auto;height:auto;
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+  background:rgba(7,27,51,.72);color:var(--sky-soft);padding:5px 9px;border-radius:5px;
+  backdrop-filter:blur(6px);
+}
+.pdp{padding:16px 16px 20px}
+.pdp-title{font-family:var(--display);font-weight:700;font-size:17px;letter-spacing:-.02em}
+.pdp-price{font-family:var(--mono);font-size:14px;color:var(--ink-3);margin-top:3px}
+.pdp-atc{
+  margin-top:13px;height:42px;border-radius:9px;background:var(--ink);color:var(--white);
+  display:grid;place-items:center;font-weight:600;font-size:14px;
+}
+.pdp-meter{margin-top:13px;display:flex;align-items:center;gap:10px}
+.pdp-meter-bar{flex:1;height:6px;border-radius:4px;background:var(--mist);overflow:hidden}
+.pdp-meter-fill{height:100%;width:88%;background:var(--blue);border-radius:4px;transition:width .7s cubic-bezier(.2,.7,.2,1)}
+.pdp-meter-fill{background:linear-gradient(90deg,var(--blue),var(--sky))}
+.sim[data-mode="still"] .pdp-meter-fill{width:34%;background:var(--blue)}
+.pdp-meter-val{font-family:var(--mono);font-size:11px;color:var(--body);width:66px;text-align:right}
+.sim-caption{margin-top:14px;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--ink-3);text-align:center;line-height:1.7}
+
+/* ============================================================
+   PROOF BAND
+   ============================================================ */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line-dark);border:1px solid var(--line-dark);border-radius:var(--r);overflow:hidden}
+.stat{background:var(--ink);padding:32px 24px 26px}
+.stat-num{font-family:var(--display);font-weight:800;font-size:clamp(34px,4.2vw,46px);letter-spacing:-.04em;color:var(--sky);line-height:1}
+.stat-label{margin-top:12px;font-size:14.5px;color:#B7CFE7;line-height:1.5;font-weight:500}
+.stat-src{margin-top:14px;font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:#5F84AC;line-height:1.6}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.stats{grid-template-columns:1fr}}
+
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;margin-top:56px}
+.why-card{border:1px solid var(--line-dark);border-radius:var(--r);padding:26px 24px;background:linear-gradient(180deg,rgba(87,196,245,.06),transparent)}
+.why-card h3{font-size:19px;margin-bottom:10px;color:var(--white)}
+.why-card p{font-size:15.5px;color:#A9C4E0;line-height:1.62}
+.why-idx{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--sky);display:block;margin-bottom:14px}
+@media(max-width:900px){.why{grid-template-columns:1fr}}
+
+/* ============================================================
+   SAMPLES
+   ============================================================ */
+.reel{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.clip{
+  position:relative;border-radius:var(--r);overflow:hidden;background:var(--ink);
+  border:1px solid var(--line);box-shadow:var(--shadow-sm);
+}
+.clip video{aspect-ratio:4/5;width:100%;height:100%;object-fit:cover}
+.clip-meta{
+  position:absolute;left:12px;bottom:12px;right:12px;display:flex;justify-content:space-between;gap:8px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--sky-soft);
+  background:rgba(7,27,51,.7);padding:6px 9px;border-radius:6px;backdrop-filter:blur(6px);
+}
+@media(max-width:820px){.reel{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.reel{grid-template-columns:1fr;max-width:340px;margin:0 auto}}
+/* every well is 4:5, the ratio the renders ship in */
+.clip{aspect-ratio:4/5}
+/* unused now that every clip is 4:5. Add class="fit" to a card if you ever drop
+   in a clip at another ratio and want it shown whole rather than cropped. */
+.clip.fit video{object-fit:contain;background:#050F1E}
+.clip-ratio{position:absolute;left:12px;top:12px;font-family:var(--mono);font-size:10px;letter-spacing:.13em;color:var(--sky-soft);background:rgba(7,27,51,.7);padding:4px 7px;border-radius:5px;backdrop-filter:blur(6px)}
+
+.loader{
+  margin-top:28px;border:1px dashed var(--line);border-radius:var(--r);background:var(--white);
+  padding:22px 24px;display:flex;flex-wrap:wrap;align-items:center;gap:16px 22px;
+}
+.loader-txt{flex:1;min-width:260px}
+.loader-txt strong{font-family:var(--display);font-size:16px;letter-spacing:-.01em}
+.loader-txt p{font-size:14px;color:var(--body);margin-top:4px}
+.loader input[type=file]{display:none}
+code{font-family:var(--mono);font-size:12.5px;background:var(--mist);padding:2px 6px;border-radius:4px;color:var(--blue-deep)}
+.loader-status{font-family:var(--mono);font-size:11px;color:var(--blue);letter-spacing:.05em;width:100%}
+
+/* ============================================================
+   PROCESS
+   ============================================================ */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.step{border:1px solid var(--line);border-radius:var(--r);padding:30px 26px;background:var(--white);position:relative;transition:border-color .2s,transform .2s}
+.step:hover{border-color:var(--sky);transform:translateY(-3px)}
+.step-n{
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--blue);
+  display:flex;align-items:center;gap:10px;margin-bottom:16px;
+}
+.step-n::after{content:"";flex:1;height:1px;background:var(--line)}
+.step h3{font-size:20px;margin-bottom:10px}
+.step p{font-size:15.5px;color:var(--body)}
+@media(max-width:900px){.steps{grid-template-columns:1fr}}
+
+/* --- spec sheet --- */
+.spec{margin-top:56px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--white)}
+.spec-head{
+  background:var(--ink);color:var(--sky);padding:14px 22px;font-family:var(--mono);
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+}
+.spec-row{display:grid;grid-template-columns:210px 1fr;gap:20px;padding:15px 22px}
+.spec-row + .spec-row{border-top:1px solid var(--line)}
+.spec-k{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--body);padding-top:2px}
+.spec-v{font-size:15.5px}
+@media(max-width:680px){.spec-row{grid-template-columns:1fr;gap:4px}}
+
+/* ============================================================
+   PRICING
+   ============================================================ */
+.tiers{display:grid;grid-template-columns:repeat(2,1fr);gap:26px;align-items:stretch;max-width:880px;margin:0 auto}
+.tier{border:1px solid var(--line);border-radius:var(--r);background:var(--white);padding:30px 28px;display:flex;flex-direction:column;height:100%}
+.tier.feature{border-color:var(--blue);box-shadow:var(--shadow);position:relative}
+.tier-flag{
+  position:absolute;top:-11px;left:28px;background:var(--blue);color:var(--white);
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  padding:4px 11px;border-radius:20px;
+}
+.tier-name{font-family:var(--mono);font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--blue)}
+.tier-price{font-family:var(--display);font-weight:800;font-size:40px;letter-spacing:-.04em;margin:14px 0 4px}
+.tier-sub{font-family:var(--mono);font-size:11px;color:var(--body);letter-spacing:.04em}
+.tier ul{list-style:none;padding:0;margin:22px 0 26px;display:grid;gap:11px}
+.tier li{position:relative;padding-left:26px;font-size:15px;color:var(--body);line-height:1.55}
+.tier li::before{
+  content:"";position:absolute;left:0;top:7px;width:14px;height:14px;border-radius:50%;
+  background:var(--mist);border:1px solid var(--sky);
+}
+.tier li::after{content:"";position:absolute;left:4.5px;top:11px;width:5px;height:5px;border-radius:50%;background:var(--blue)}
+.tier .btn{margin-top:auto;width:100%}
+@media(max-width:820px){.tiers{grid-template-columns:1fr}}
+/* package type switch */
+.ptabs{display:flex;justify-content:center;margin:0 auto 34px;padding:5px;gap:4px;
+  background:var(--white);border:1px solid var(--line);border-radius:12px;
+  box-shadow:var(--shadow-sm);width:fit-content;max-width:100%}
+.ptabs button{border:0;background:transparent;cursor:pointer;padding:11px 22px;border-radius:9px;
+  font-family:var(--text);font-weight:600;font-size:14.5px;color:var(--body);
+  display:flex;align-items:center;gap:9px;transition:background .18s,color .18s;white-space:nowrap}
+.ptabs button:hover{color:var(--blue)}
+.ptabs button[aria-selected="true"]{background:var(--ink);color:var(--white)}
+.ptabs .ptab-sub{font-family:var(--mono);font-size:10px;letter-spacing:.09em;opacity:.7;text-transform:uppercase}
+@media(max-width:520px){.ptabs{width:100%}.ptabs button{flex:1;justify-content:center;padding:11px 10px;font-size:13.5px}.ptabs .ptab-sub{display:none}}
+[role="tabpanel"][hidden]{display:none}
+.tier-rate{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--blue);margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+.tier-save{display:inline-block;margin-left:8px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-deep);background:var(--mist);padding:3px 8px;border-radius:20px;vertical-align:middle}
+
+/* category motion strip */
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:44px}
+.cat{background:var(--white);padding:24px 22px 26px}
+.cat-k{font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:14px}
+.cat-v{font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.02em;line-height:1.25}
+.cat-n{margin-top:9px;font-size:14px;color:var(--body);line-height:1.55}
+@media(max-width:900px){.cats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.cats{grid-template-columns:1fr}}
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+.faq{max-width:840px;margin:0 auto}
+details{border-top:1px solid var(--line);padding:4px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{
+  cursor:pointer;list-style:none;padding:20px 40px 20px 0;position:relative;
+  font-family:var(--display);font-weight:600;font-size:19px;letter-spacing:-.015em;
+}
+summary::-webkit-details-marker{display:none}
+summary::after{
+  content:"";position:absolute;right:8px;top:29px;width:11px;height:11px;
+  border-right:2px solid var(--blue);border-bottom:2px solid var(--blue);
+  transform:rotate(45deg);transition:transform .2s;
+}
+details[open] summary::after{transform:rotate(-135deg)}
+details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
+
+/* ============================================================
+   CLOSER + FOOTER
+   ============================================================ */
+.closer{text-align:center;padding:112px 0}
+.closer h2{font-size:clamp(32px,4.6vw,52px);margin-bottom:20px}
+.closer .lead{margin:0 auto 34px}
+.foot{background:var(--ink);color:#8FAFCE;padding:56px 0 40px;font-size:14px}
+.foot-top{display:flex;flex-wrap:wrap;gap:24px;align-items:center;justify-content:space-between;padding-bottom:28px;border-bottom:1px solid var(--line-dark)}
+.foot .brand{color:var(--white)}
+.foot-links{display:flex;gap:24px;flex-wrap:wrap}
+.foot-links a{text-decoration:none;font-size:14px}
+.foot-links a:hover{color:var(--sky)}
+.foot-src{margin-top:26px;font-family:var(--mono);font-size:10.5px;line-height:1.85;color:#5F84AC;max-width:900px}
+.foot-src a{color:#7FA3C8}
+.foot-legal{margin-top:22px;font-size:12.5px;line-height:1.7;color:#5F84AC;max-width:900px}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="1.2" y="1.2" width="29.6" height="29.6" rx="9" fill="#1663D8"/>
+        <path d="M9 16a7 7 0 1 1 2.6 5.4" fill="none" stroke="#57C4F5" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M14.6 14.3v3.4l3-1.7z" fill="#fff"/>
+        <circle cx="9" cy="16" r="2.3" fill="#fff"/>
+      </svg>
+      Yeltis
+    </a>
+    <nav class="nav-links">
+      <a href="#proof">Why it works</a>
+      <a href="#samples">Samples</a>
+      <a href="#process">Process</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#start">Get a free sample render</a>
+  </div>
+</header>
+
+<!-- ============================ HERO ============================ -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">4:5 looping renders for Shopify PDPs</span>
+      <h1>Get your product photos moving. <em>Your cart moves with them.</em></h1>
+      <p class="lead">Yeltis turns the product photography you already own into looping product video. Every video is formatted to 4:5 vertical at 1080 x 1350 px, the ratio Shopify's product media gallery is built around, so the file drops into your gallery and fills the frame with no cropping and no letterboxing. No app, no subscription, no player script slowing your store down.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#start">Get a free sample render</a>
+        <a class="btn btn-ghost" href="#samples">Watch the sample reel</a>
+      </div>
+      <div class="hero-note">
+        <span>48 hour delivery</span>
+        <span>Zero physical shipping</span>
+        <span>From $16.23 per SKU</span>
+      </div>
+    </div>
+
+    <!-- SIGNATURE ELEMENT: live product page simulator -->
+    <div class="sim" id="sim" data-mode="loop">
+      <div class="sim-toggle" role="group" aria-label="Product page media">
+        <button type="button" data-mode="loop" aria-pressed="true">Yeltis loop</button>
+        <button type="button" data-mode="still" aria-pressed="false">Static image</button>
+      </div>
+      <div class="phone">
+        <div class="phone-bar">yourstore.myshopify.com</div>
+        <div class="stage">
+          <img class="still" src="videos/hero-still.jpg" alt="Static product photo of the dress, as it appears in a normal Shopify gallery">
+          <video data-slot="hero" src="videos/hero-loop.mp4" poster="videos/hero-loop.jpg" muted loop playsinline autoplay preload="auto" aria-label="Model turnaround render of the same dress"></video>
+          <span class="stage-tag" id="stageTag">Looping video &middot; muted</span>
+        </div>
+        <div class="pdp">
+          <div class="pdp-title">Pleated flutter-sleeve dress</div>
+          <div class="pdp-price">$148.00</div>
+          <div class="pdp-atc">Add to cart</div>
+          <div class="pdp-meter">
+            <div class="pdp-meter-bar"><div class="pdp-meter-fill"></div></div>
+            <div class="pdp-meter-val" id="dwellVal">1:58</div>
+          </div>
+        </div>
+      </div>
+      <p class="sim-caption">Same dress, same page. Tap to see it static.<br>Dwell time shown is illustrative.</p>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="rail"><span class="rail-mark"></span></div></div>
+
+<!-- ============================ PROOF ============================ -->
+<section class="sec dark" id="proof">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow on-dark">Why it works</span>
+      <h2>A shopper who watches is a different shopper.</h2>
+      <p class="lead">Static images ask a buyer to imagine scale, texture and finish. Video answers those questions before the buyer has to ask them. Here is what third-party benchmark data says happens on product pages that carry it.</p>
+    </div>
+
+    <!-- STATS: edit these four cards to change the proof band. -->
+    <div class="stats" id="stats">
+      <div class="stat">
+        <div class="stat-num" data-count="144" data-prefix="+" data-suffix="%">+144%</div>
+        <div class="stat-label">Higher add-to-cart likelihood after a shopper watches a product video.</div>
+        <div class="stat-src">Invesp conversion research. A ceiling figure. Typical mid-market lift runs 20 to 60%.</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" data-count="4.8" data-decimals="1" data-suffix="%">4.8%</div>
+        <div class="stat-label">Conversion rate on sites with product video, against 2.9% without. A 66% relative lift.</div>
+        <div class="stat-src">Aberdeen Group, cited across current benchmark reports.</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" data-count="85" data-suffix="%">85%</div>
+        <div class="stat-label">Of consumers say they have been convinced to buy something after watching a video about it.</div>
+        <div class="stat-src">Wyzowl, State of Video Marketing 2026. Consumer survey, 12th annual edition.</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" data-count="89" data-suffix="%">89%</div>
+        <div class="stat-label">Say video quality affects how much they trust a brand. Motion is only an asset when it looks deliberate.</div>
+        <div class="stat-src">Wyzowl, State of Video Marketing 2026.</div>
+      </div>
+    </div>
+
+    <div class="why">
+      <div class="why-card">
+        <span class="why-idx">01 / CONVERSION</span>
+        <h3>It closes the imagination gap.</h3>
+        <p>A still asks the buyer to imagine scale, texture and finish. Motion answers those questions before they get asked, which is why video sits on the conversion line rather than the brand-awareness line.</p>
+      </div>
+      <div class="why-card">
+        <span class="why-idx">02 / RETENTION</span>
+        <h3>It stops the swipe.</h3>
+        <p>On mobile, an image carousel is something to get past. A clip that is already playing is something to watch, and time on the page is the input every other product page metric depends on.</p>
+      </div>
+      <div class="why-card">
+        <span class="why-idx">03 / TRUST</span>
+        <h3>It reads as a real business.</h3>
+        <p>89% of consumers say video quality shapes their trust in a brand. Ambient product motion is what category leaders ship, and a store that has it is quietly telling the buyer that someone is home.</p>
+      </div>
+    </div>
+
+    <p class="tiny" style="margin-top:34px;max-width:800px">Figures above are published third-party benchmarks describing other merchants and other studies, not a forecast for your store. The add-to-cart figure in particular is a ceiling: real-world lift for mid-market ecommerce more typically lands in the 20 to 60% range, which is still a strong return on a $25 asset. Results depend on your traffic, offer, price point and placement.</p>
+  </div>
+</section>
+
+<!-- ============================ SAMPLES ============================ -->
+<section class="sec" id="samples">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Sample reel</span>
+      <h2>Real work, at the real ratio.</h2>
+      <p class="lead">Real renders from real catalogs, playing at the size and ratio they ship in. Ambient scene motion for products that sit still, full model turnarounds for anything worn. Frame 0 opens at full brightness, so there is no dark flash while your gallery loads.</p>
+    </div>
+
+    <div class="reel" id="reel">
+      <div class="clip">
+        <video data-slot="1" src="videos/loop-skincare.mp4" poster="videos/loop-skincare.jpg" muted loop playsinline autoplay preload="none" aria-label="Skincare looping product render"></video>
+        <span class="clip-ratio">1080 &times; 1350</span>
+        <div class="clip-meta"><span>Skincare</span><span>4:5 &middot; 5.5s</span></div>
+      </div>
+      <div class="clip">
+        <video data-slot="2" src="videos/loop-chili-crisp.mp4" poster="videos/loop-chili-crisp.jpg" muted loop playsinline autoplay preload="none" aria-label="Chili crisp looping product render"></video>
+        <span class="clip-ratio">1080 &times; 1350</span>
+        <div class="clip-meta"><span>Chili crisp</span><span>4:5 &middot; 4.5s</span></div>
+      </div>
+      <div class="clip">
+        <video data-slot="3" src="videos/loop-coffee.mp4" poster="videos/loop-coffee.jpg" muted loop playsinline autoplay preload="none" aria-label="Coffee looping product render"></video>
+        <span class="clip-ratio">1080 &times; 1350</span>
+        <div class="clip-meta"><span>Coffee</span><span>4:5 &middot; 7.0s</span></div>
+      </div>
+      <div class="clip">
+        <video data-slot="4" src="videos/loop-supplement.mp4" poster="videos/loop-supplement.jpg" muted loop playsinline autoplay preload="none" aria-label="Supplement looping product render"></video>
+        <span class="clip-ratio">1080 &times; 1350</span>
+        <div class="clip-meta"><span>Supplement</span><span>4:5 &middot; 7.8s</span></div>
+      </div>
+      <div class="clip">
+        <video data-slot="5" src="videos/loop-balsamic.mp4" poster="videos/loop-balsamic.jpg" muted loop playsinline autoplay preload="none" aria-label="Balsamic looping product render"></video>
+        <span class="clip-ratio">1080 &times; 1350</span>
+        <div class="clip-meta"><span>Balsamic</span><span>4:5 &middot; 6.0s</span></div>
+      </div>
+      <div class="clip">
+        <video data-slot="6" src="videos/loop-model.mp4" poster="videos/loop-model.jpg" muted loop playsinline autoplay preload="none" aria-label="Apparel looping product render"></video>
+        <span class="clip-ratio">1080 &times; 1350</span>
+        <div class="clip-meta"><span>Apparel turnaround</span><span>4:5 &middot; 10.0s</span></div>
+      </div>
+    </div>
+
+    <div class="cats">
+      <div class="cat">
+        <span class="cat-k">Skincare</span>
+        <div class="cat-v">Rolling mist</div>
+        <p class="cat-n">Slow low fog across the base of the frame. Reads as hydration without touching the bottle.</p>
+      </div>
+      <div class="cat">
+        <span class="cat-k">Coffee &amp; tea</span>
+        <div class="cat-v">Rising steam</div>
+        <p class="cat-n">Warm vapour lifting off the top of the product. Sells freshness in under a second.</p>
+      </div>
+      <div class="cat">
+        <span class="cat-k">Oils &amp; pantry</span>
+        <div class="cat-v">Sunlit orchard</div>
+        <p class="cat-n">Dappled light moving through leaves behind the bottle. Origin story, no copy required.</p>
+      </div>
+      <div class="cat">
+        <span class="cat-k">Apparel</span>
+        <div class="cat-v">Model turnaround</div>
+        <p class="cat-n">Front, profile, back and return, with the garment moving through the turn. Answers the fit and drape questions that drive apparel returns.</p>
+      </div>
+    </div>
+
+    <!--
+      PREVIEW LOADER
+      Lets you drop local MP4s straight into the four slots plus the hero
+      phone, so you can see real work on the page before uploading anything.
+      Files never leave the browser. Delete this whole .loader block before
+      you go live if you would rather not show it to visitors.
+    -->
+    <div class="loader">
+      <div class="loader-txt">
+        <strong>Preview your own clips</strong>
+        <p>Pick up to six MP4 files to swap into the reel. Files stay on your device and a refresh puts the real samples back. For the live site, drop your clips into the <code>videos/</code> folder instead.</p>
+      </div>
+      <label class="btn btn-ghost" for="clipPicker" tabindex="0" role="button">Choose video files</label>
+      <input id="clipPicker" type="file" accept="video/*" multiple>
+      <div class="loader-status" id="clipStatus" role="status"></div>
+    </div>
+  </div>
+</section>
+
+<div class="wrap"><div class="rail"><span class="rail-mark"></span></div></div>
+
+<!-- ============================ PROCESS ============================ -->
+<section class="sec tint" id="process">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">How it works</span>
+      <h2>Send photos. Get files. Upload them.</h2>
+      <p class="lead">Three steps, and only one of them is yours. Nothing ships, nothing installs on your store, and nothing bills you monthly.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-n">Step 01</div>
+        <h3>You send the photos you already have</h3>
+        <p>Your product URLs or a folder of studio shots is enough. Nothing gets shipped, boxed, insured or waited on. If the images are already live on your store, we can work straight from those.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">Step 02</div>
+        <h3>We build the loop</h3>
+        <p>Each SKU gets its own 1080p render, formatted to 4:5 at 1080 x 1350 px so it is compatible with the Shopify gallery out of the box, Product SKUs get ambient scene motion chosen for the category. Garments get a full model turnaround so fit and drape read on camera. Back in 48 hours, or 24 on the catalog package.</p>
+      </div>
+      <div class="step">
+        <div class="step-n">Step 03</div>
+        <h3>You upload it to the product</h3>
+        <p>Standard H.264 MP4, so it drops straight into Products &gt; Media in your Shopify admin next to the images. Catalog orders arrive as a single ZIP named to match your SKUs.</p>
+      </div>
+    </div>
+
+    <div class="spec">
+      <div class="spec-head">Delivery specification</div>
+      <div class="spec-row"><div class="spec-k">Resolution</div><div class="spec-v">1080p, native 4:5 vertical at 1080 x 1350 px. Every video is formatted to 4:5 to guarantee compatibility with Shopify product galleries, so it fills the frame on mobile without cropping or letterboxing</div></div>
+      <div class="spec-row"><div class="spec-k">Motion &middot; product</div><div class="spec-v">Category-tailored ambient scene motion, selected per SKU. Rolling mist for skincare, rising steam for coffee, sunlit orchard light for oils</div></div>
+      <div class="spec-row"><div class="spec-k">Motion &middot; fashion</div><div class="spec-v">Full model turnaround. Front, profile, back and return, with hem, drape and sleeve movement carried through the rotation</div></div>
+      <div class="spec-row"><div class="spec-k">Frame 0</div><div class="spec-v">Opens at full brightness. No fade up, no dark first frame when the gallery paints</div></div>
+      <div class="spec-row"><div class="spec-k">Audio</div><div class="spec-v">None. Product page media autoplays muted, so a soundtrack is dead weight</div></div>
+      <div class="spec-row"><div class="spec-k">File</div><div class="spec-v">Standard H.264 MP4 under 1 MB per clip, with faststart enabled so the gallery paints immediately. Uploads directly under Products &gt; Media in Shopify admin</div></div>
+      <div class="spec-row"><div class="spec-k">Turnaround</div><div class="spec-v">48 hours on the 20 pack, 24 hours priority on the 80 pack</div></div>
+      <div class="spec-row"><div class="spec-k">Shipping</div><div class="spec-v">None. Zero physical product required at any stage</div></div>
+      </div>
+  </div>
+</section>
+
+<!-- ============================ PRICING ============================ -->
+<section class="sec" id="pricing">
+  <div class="wrap">
+    <div class="sec-head" style="text-align:center;margin-left:auto;margin-right:auto">
+      <span class="eyebrow">Pricing</span>
+      <h2>Two packages. One payment. Files are yours.</h2>
+      <p class="lead" style="margin:0 auto">You are buying assets, not renting a widget. No monthly fee, no app subscription, and nothing that switches off if you stop paying, because there is nothing to stop paying.</p>
+    </div>
+
+    <div class="ptabs" role="tablist" aria-label="Package type">
+      <button role="tab" id="tab-product" aria-controls="panel-product" aria-selected="true" type="button">
+        Product <span class="ptab-sub">from $16.23</span>
+      </button>
+      <button role="tab" id="tab-fashion" aria-controls="panel-fashion" aria-selected="false" type="button">
+        Fashion <span class="ptab-sub">from $19.49</span>
+      </button>
+    </div>
+
+    <div class="tiers" role="tabpanel" id="panel-product" aria-labelledby="tab-product">
+      <div class="tier">
+        <div class="tier-name">20 Product Package</div>
+        <div class="tier-price">$499</div>
+        <div class="tier-sub">One time &middot; up to 20 SKUs</div>
+        <ul>
+          <li>All videos formatted to 4:5 vertical at 1080 x 1350 px for guaranteed Shopify compatibility</li>
+          <li>Category-tailored ambient motion, matched to what the product is</li>
+          <li>Instant full-brightness frame 0</li>
+          <li>Standard H.264 MP4, ready for Products &gt; Media</li>
+          <li>48 hour delivery, zero physical shipping</li>
+        </ul>
+        <div class="tier-rate">$25.00 PER SKU</div>
+        <a class="btn btn-ghost" href="#start" style="margin-top:22px">Start the 20 pack</a>
+      </div>
+      <div class="tier feature">
+        <span class="tier-flag">Best value</span>
+        <div class="tier-name">80 Product Full Catalog</div>
+        <div class="tier-price">$1,299<span class="tier-save">Saves $697</span></div>
+        <div class="tier-sub">One time &middot; up to 80 SKUs</div>
+        <ul>
+          <li>All videos formatted to 4:5 vertical at 1080 x 1350 px for guaranteed Shopify compatibility</li>
+          <li>Category-tailored motion plus custom background scene options on every SKU</li>
+          <li>Instant full-brightness frame 0</li>
+          <li>Standard H.264 MP4, ready for Products &gt; Media</li>
+          <li>Priority 24 hour turnaround, bulk ZIP delivery</li>
+        </ul>
+        <div class="tier-rate">$16.23 PER SKU</div>
+        <a class="btn btn-primary" href="#start" style="margin-top:22px">Do the whole catalog</a>
+      </div>
+    </div>
+
+    <div class="tiers" role="tabpanel" id="panel-fashion" aria-labelledby="tab-fashion" hidden>
+      <div class="tier">
+        <div class="tier-name">20 Garment Package</div>
+        <div class="tier-price">$599</div>
+        <div class="tier-sub">One time &middot; up to 20 SKUs</div>
+        <ul>
+          <li>All videos formatted to 4:5 vertical at 1080 x 1350 px for guaranteed Shopify compatibility</li>
+          <li>Full model turnaround: front, profile, back and return</li>
+          <li>Garment motion captured through the turn, so hem, drape and flutter read on camera</li>
+          <li>Instant full-brightness frame 0</li>
+          <li>Standard H.264 MP4, ready for Products &gt; Media</li>
+          <li>48 hour delivery, zero physical shipping</li>
+        </ul>
+        <div class="tier-rate">$29.95 PER SKU</div>
+        <a class="btn btn-ghost" href="#start" style="margin-top:22px">Start the 20 pack</a>
+      </div>
+      <div class="tier feature">
+        <span class="tier-flag">Best value</span>
+        <div class="tier-name">80 Garment Full Catalog</div>
+        <div class="tier-price">$1,559<span class="tier-save">Saves $837</span></div>
+        <div class="tier-sub">One time &middot; up to 80 SKUs</div>
+        <ul>
+          <li>All videos formatted to 4:5 vertical at 1080 x 1350 px for guaranteed Shopify compatibility</li>
+          <li>Full model turnaround on every SKU</li>
+          <li>Garment motion captured through the turn, so hem, drape and flutter read on camera</li>
+          <li>Colourway variants of the same garment priced as one SKU</li>
+          <li>Instant full-brightness frame 0</li>
+          <li>Standard H.264 MP4, ready for Products &gt; Media</li>
+          <li>Priority 24 hour turnaround, bulk ZIP delivery</li>
+        </ul>
+        <div class="tier-rate">$19.49 PER SKU</div>
+        <a class="btn btn-primary" href="#start" style="margin-top:22px">Do the whole catalog</a>
+      </div>
+    </div>
+
+    <p class="tiny" id="priceNote" style="margin-top:26px;text-align:center;max-width:760px;margin-left:auto;margin-right:auto">Product packages cover anything that sits still: bottles, jars, bags, hard goods. Fashion packages cover anything worn, and carry a full model turnaround instead of ambient scene motion, which is a longer build. Savings shown against each range's own 20 pack rate. Either way, the first render is free on a product you choose.</p>
+  </div>
+</section>
+
+<div class="wrap"><div class="rail"><span class="rail-mark"></span></div></div>
+
+<!-- ============================ FAQ ============================ -->
+<section class="sec tint" id="faq">
+  <div class="wrap">
+    <div class="sec-head" style="text-align:center;margin-left:auto;margin-right:auto">
+      <span class="eyebrow">Questions</span>
+      <h2>The things store owners ask first.</h2>
+    </div>
+    <div class="faq">
+      <details open>
+        <summary>Will this slow my product page down?</summary>
+        <p>It should not. Every clip ships under 1 MB, which is smaller than a single unoptimised product photo on most stores. They are standard H.264 MP4 files sitting in Shopify's own product media, so there is no third-party player script and no app, which is where most video solutions actually cost you speed. Frame 0 opens at full brightness, so the gallery never shows a dark square while the file loads.</p>
+      </details>
+      <details>
+        <summary>Do I have to ship you the product?</summary>
+        <p>No. Zero physical shipping at any stage. We work from the product photography already on your store, so there is no box, no courier, no insurance and no week of waiting before anything starts.</p>
+      </details>
+      <details>
+        <summary>Why does fashion cost more?</summary>
+        <p>A product render animates the scene around a stationary object. A garment render has to move the garment itself through a full turn while the fit, drape and fall of the fabric stay believable frame to frame. It is a longer build with more that can go wrong, so it carries a 20% premium: $29.95 per SKU against $25.00, or $19.49 against $16.23 at catalog volume.</p>
+      </details>
+      <details>
+        <summary>How fast is delivery, really?</summary>
+        <p>48 hours on the 20 product package. 24 hours priority on the 80 product catalog package, delivered as one ZIP named to match your SKUs. The clock starts once we have your product URLs.</p>
+      </details>
+      <details>
+        <summary>What does "category-tailored motion" actually mean?</summary>
+        <p>For products that sit still, the background moves in a way that suits what the thing is. Rolling mist behind skincare, rising steam off coffee, sunlit orchard light behind an olive oil. For apparel it means something different: the garment itself moves, through a full model turnaround, so a shopper can see how it sits, how the hem falls and how much it moves.</p>
+      </details>
+      <details>
+        <summary>Why is everything 4:5?</summary>
+        <p>4:5 vertical at 1080 x 1350 px is the ratio Shopify's product media gallery is built around, and it is the shape that fills a phone screen without wasting it. A 16:9 clip loses most of the height on mobile and a square clip loses some of it. Formatting every video to 4:5 means the file drops into your gallery and sits at the same size as your existing product images, with no cropping, no letterboxing and no theme surgery.</p>
+      </details>
+      <details>
+        <summary>Does it work with my theme?</summary>
+        <p>Shopify supports MP4 in native product media on every modern theme. The files upload under Products &gt; Media in your admin, the same place your images already live. Nothing to install and nothing to configure.</p>
+      </details>
+      <details>
+        <summary>What if the first one is not right?</summary>
+        <p>Start with the free render. Pick one product, we build the loop, and you decide from there. If it does not earn a place on the page there is nothing owed and nothing to cancel.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CLOSER ============================ -->
+<section class="closer" id="start">
+  <div class="wrap">
+    <span class="eyebrow">Start here</span>
+    <h2 style="margin-top:18px">Pick one product. We will render it free.</h2>
+    <p class="lead">Send one product URL and we will build a 4:5 loop for it at no cost, with no call required. Nothing to ship. If it earns a place on the page, the other 19 are $499 and the whole catalog is $1,299.</p>
+    <a class="btn btn-primary" href="mailto:hello@yeltis.com?subject=Free%20sample%20render&amp;body=Product%20URL%3A%20">Send a product URL</a>
+    <p class="tiny" style="margin-top:20px">No account, no card, no obligation.</p>
+  </div>
+</section>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-top">
+      <a class="brand" href="#top">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="1.2" y="1.2" width="29.6" height="29.6" rx="9" fill="#1663D8"/>
+          <path d="M9 16a7 7 0 1 1 2.6 5.4" fill="none" stroke="#57C4F5" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M14.6 14.3v3.4l3-1.7z" fill="#fff"/>
+          <circle cx="9" cy="16" r="2.3" fill="#fff"/>
+        </svg>
+        Yeltis
+      </a>
+      <div class="foot-links">
+        <a href="#proof">Why it works</a>
+        <a href="#samples">Samples</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#start">Free sample render</a>
+        <a href="mailto:hello@yeltis.com">hello@yeltis.com</a>
+      </div>
+    </div>
+
+    <div class="foot-src">
+      SOURCES &middot; Invesp, product video conversion research &middot; Aberdeen Group, product page conversion benchmark, as compiled in current industry roundups &middot; Wyzowl, The State of Video Marketing 2026 (12th annual survey) &middot; Unbounce, Conversion Benchmark Report. Full citations available on request.
+    </div>
+
+    <div class="foot-legal">
+      Yeltis is an independent production studio and is not affiliated with, endorsed by, or officially connected to Shopify Inc. "Shopify" is a trademark of Shopify Inc. Statistics on this site are published third-party benchmarks describing other merchants' results and are provided for context only. They are not a prediction or guarantee of the results any individual store will see.
+      <br><br>© 2026 Yeltis. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---------- PDP simulator toggle ---------- */
+  var sim = document.getElementById("sim");
+  var tag = document.getElementById("stageTag");
+  var dwell = document.getElementById("dwellVal");
+  if (sim) {
+    sim.querySelectorAll(".sim-toggle button").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var mode = btn.dataset.mode;
+        sim.dataset.mode = mode;
+        sim.querySelectorAll(".sim-toggle button").forEach(function(b){
+          b.setAttribute("aria-pressed", String(b === btn));
+        });
+        tag.textContent = mode === "loop" ? "Looping video · muted" : "Image 1 of 6";
+        dwell.textContent = mode === "loop" ? "1:58" : "0:14";
+        var v = sim.querySelector("video");
+        if (v && mode === "loop") { var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+      });
+    });
+  }
+
+  /* ---------- Package type tabs ---------- */
+  var ptabs = document.querySelectorAll('.ptabs [role="tab"]');
+  function selectTab(tab){
+    ptabs.forEach(function(t){
+      var on = t === tab;
+      t.setAttribute("aria-selected", String(on));
+      var panel = document.getElementById(t.getAttribute("aria-controls"));
+      if (panel) panel.hidden = !on;
+    });
+  }
+  ptabs.forEach(function(tab, i){
+    tab.addEventListener("click", function(){ selectTab(tab); });
+    tab.addEventListener("keydown", function(e){
+      var next = null;
+      if (e.key === "ArrowRight") next = ptabs[(i + 1) % ptabs.length];
+      if (e.key === "ArrowLeft")  next = ptabs[(i - 1 + ptabs.length) % ptabs.length];
+      if (next) { e.preventDefault(); next.focus(); selectTab(next); }
+    });
+  });
+
+  /* ---------- Count up the proof band once, on first view ---------- */
+  var band = document.getElementById("stats");
+  if (band) {
+    var run = function(){
+      band.querySelectorAll("[data-count]").forEach(function(el){
+        var target = parseFloat(el.dataset.count);
+        var dec = parseInt(el.dataset.decimals || "0", 10);
+        var pre = el.dataset.prefix || "";
+        var suf = el.dataset.suffix || "";
+        if (reduce) { el.textContent = pre + target.toFixed(dec) + suf; return; }
+        var t0 = null, dur = 1400;
+        var tick = function(ts){
+          if (!t0) t0 = ts;
+          var k = Math.min((ts - t0) / dur, 1);
+          var eased = 1 - Math.pow(1 - k, 3);
+          el.textContent = pre + (target * eased).toFixed(dec) + suf;
+          if (k < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
+    };
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if (e.isIntersecting) { run(); io.disconnect(); } });
+      }, { threshold: 0.35 });
+      io.observe(band);
+    } else { run(); }
+  }
+
+  /* ---------- Local clip preview ----------
+     Assigns chosen files to the hero phone and the four reel slots.
+     Nothing is uploaded; object URLs live only in this tab.        */
+  var picker = document.getElementById("clipPicker");
+  var status = document.getElementById("clipStatus");
+  var label = document.querySelector('label[for="clipPicker"]');
+  if (label) {
+    label.addEventListener("keydown", function(e){
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); picker.click(); }
+    });
+  }
+  if (picker) {
+    picker.addEventListener("change", function(){
+      var files = Array.prototype.slice.call(picker.files || []);
+      if (!files.length) return;
+      var targets = ["1","2","3","4","5","6"];
+      files.slice(0,6).forEach(function(file, i){
+        var url = URL.createObjectURL(file);
+        var sel = 'video[data-slot="' + targets[i] + '"]';
+        if (i === 0) sel += ', video[data-slot="hero"]';   // slot 1 also drives the hero phone
+        document.querySelectorAll(sel).forEach(function(v){
+          v.removeAttribute("poster");
+          v.src = url; v.load();
+          var pr = v.play(); if (pr && pr.catch) pr.catch(function(){});
+        });
+      });
+      var n = Math.min(files.length, 6);
+      status.textContent = n + (n === 1 ? " clip loaded" : " clips loaded") +
+        ". Reload the page to go back to the samples.";
+      if (files.length > 6) status.textContent += " Only the first 6 were used.";
+    });
+  }
+
+  /* ---------- Keep autoplay honest on mobile Safari ---------- */
+  document.querySelectorAll("video").forEach(function(v){
+    v.addEventListener("canplay", function(){
+      var p = v.play(); if (p && p.catch) p.catch(function(){});
+    }, { once: true });
+  });
+})();
+</script>
+</body>
+</html>
