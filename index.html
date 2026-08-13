@@ -111,6 +111,31 @@ p{margin:0}
 .tint{background:var(--paper)}
 
 /* ============================================================
+   FREE SAMPLE FORM
+   ============================================================ */
+.sform{max-width:520px;margin:34px auto 0;text-align:left}
+.sform-row{margin-bottom:16px}
+.sform label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--body);margin-bottom:7px}
+.sform input{
+  width:100%;padding:14px 16px;font-family:var(--text);font-size:16px;color:var(--ink);
+  background:var(--white);border:1px solid var(--line);border-radius:10px;
+  transition:border-color .16s,box-shadow .16s;
+}
+.sform input::placeholder{color:#9DB3CC}
+.sform input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(22,99,216,.13)}
+.sform input:user-invalid{border-color:#C0392B}
+.sform .btn{width:100%;margin-top:6px}
+.sform-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.sform-note{margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.04em;
+  color:#7E97B4;text-align:center;line-height:1.7}
+.sform-msg{margin-top:16px;padding:14px 16px;border-radius:10px;font-size:15px;line-height:1.55;display:none}
+.sform-msg.show{display:block}
+.sform-msg.ok{background:var(--mist);border:1px solid var(--sky);color:var(--ink)}
+.sform-msg.err{background:#FDF0EE;border:1px solid #E8B4AE;color:#8C2E20}
+.sform.sent .sform-row,.sform.sent .btn,.sform.sent .sform-note{display:none}
+
+/* ============================================================
    NAV
    ============================================================ */
 .nav{
@@ -768,9 +793,30 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
   <div class="wrap">
     <span class="eyebrow">Start here</span>
     <h2 style="margin-top:18px">Pick one product. We will render it free.</h2>
-    <p class="lead">Send one product URL and we will build a 4:5 loop for it at no cost, with no call required. Nothing to ship. If it earns a place on the page, the other 19 are $499 and the whole catalog is $1,299.</p>
-    <a class="btn btn-primary" href="mailto:ken@goyeltis.com?subject=Free%20sample%20render&amp;body=Product%20URL%3A%20">Send a product URL</a>
-    <p class="tiny" style="margin-top:20px">No account, no card, no obligation.</p>
+    <p class="lead">Paste one product URL and we will build a 4:5 loop for it at no cost. No call, nothing to ship, no card. If it earns a place on your page, the other 19 are $499 and the whole catalog is $1,299.</p>
+
+    <form class="sform" id="sampleForm" novalidate>
+      <div class="sform-row">
+        <label for="sfName">Your name</label>
+        <input type="text" id="sfName" name="name" autocomplete="name" required placeholder="Jane Okafor">
+      </div>
+      <div class="sform-row">
+        <label for="sfEmail">Email for delivery</label>
+        <input type="email" id="sfEmail" name="email" autocomplete="email" required placeholder="jane@yourstore.com">
+      </div>
+      <div class="sform-row">
+        <label for="sfUrl">Product page URL</label>
+        <input type="url" id="sfUrl" name="product_url" required placeholder="https://yourstore.com/products/...">
+      </div>
+      <div class="sform-hp" aria-hidden="true">
+        <label for="sfCompany">Company</label>
+        <input type="text" id="sfCompany" name="_gotcha" tabindex="-1" autocomplete="off">
+      </div>
+      <button type="submit" class="btn btn-primary" id="sfSubmit">Send my product URL</button>
+      <p class="sform-note">We reply with the finished render, usually within 48 hours.<br>No account, no card, no obligation.</p>
+    </form>
+
+    <div class="sform-msg" id="sfMsg" role="status" aria-live="polite"></div>
   </div>
 </section>
 
@@ -911,6 +957,61 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
       status.textContent = n + (n === 1 ? " clip loaded" : " clips loaded") +
         ". Reload the page to go back to the samples.";
       if (files.length > 6) status.textContent += " Only the first 6 were used.";
+    });
+  }
+
+
+  /* ---------- Free sample request form ----------
+     Posts to Formspree, which forwards to FALLBACK_EMAIL. If the endpoint ever
+     stops working, the visitor is told to email that address directly rather
+     than being left at a dead button. To move providers, change FORM_ENDPOINT. */
+  var FORM_ENDPOINT = "https://formspree.io/f/xqpzlzqp";
+  var FALLBACK_EMAIL = "ken@goyeltis.com";
+
+  var sform = document.getElementById("sampleForm");
+  if (sform) {
+    var sfMsg = document.getElementById("sfMsg");
+    var sfBtn = document.getElementById("sfSubmit");
+
+    var say = function(text, kind){
+      sfMsg.textContent = text;
+      sfMsg.className = "sform-msg show " + kind;
+    };
+
+    sform.addEventListener("submit", function(e){
+      e.preventDefault();
+      if (!sform.checkValidity()) { sform.reportValidity(); return; }
+
+      var name = document.getElementById("sfName").value.trim();
+      var email = document.getElementById("sfEmail").value.trim();
+      var url = document.getElementById("sfUrl").value.trim();
+      if (document.getElementById("sfCompany").value) return;   // honeypot
+
+      var done = function(){
+        sform.classList.add("sent");
+        say("Got it, " + name.split(" ")[0] + ". We will send the finished render to " +
+            email + ", usually within 48 hours.", "ok");
+      };
+
+      sfBtn.disabled = true;
+      sfBtn.textContent = "Sending...";
+
+      fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name, email: email, product_url: url,
+          _subject: "Free sample render request from " + name
+        })
+      }).then(function(r){
+        if (r.ok) { done(); }
+        else { throw new Error("bad response"); }
+      }).catch(function(){
+        sfBtn.disabled = false;
+        sfBtn.textContent = "Send my product URL";
+        say("That did not go through. Email " + FALLBACK_EMAIL +
+            " with your product URL and we will pick it up from there.", "err");
+      });
     });
   }
 
