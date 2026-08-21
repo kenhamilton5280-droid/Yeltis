@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Yeltis · Looping product video for Shopify product pages</title>
-<meta name="description" content="Yeltis turns your existing product photography into 4:5 looping video for Shopify product pages. Shopify-ready MP4 files under 1 MB, no app required.">
+<title>Yeltis · Model turnaround video for women's clothing boutiques</title>
+<meta name="description" content="Yeltis turns your existing product photos into model turnaround video for every garment in your Shopify store. Delivered in your theme's format, native Shopify media, no app, no shoot.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -111,6 +111,31 @@ p{margin:0}
 .tint{background:var(--paper)}
 
 /* ============================================================
+   FREE SAMPLE FORM
+   ============================================================ */
+.sform{max-width:520px;margin:34px auto 0;text-align:left}
+.sform-row{margin-bottom:16px}
+.sform label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--body);margin-bottom:7px}
+.sform input{
+  width:100%;padding:14px 16px;font-family:var(--text);font-size:16px;color:var(--ink);
+  background:var(--white);border:1px solid var(--line);border-radius:10px;
+  transition:border-color .16s,box-shadow .16s;
+}
+.sform input::placeholder{color:#9DB3CC}
+.sform input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(22,99,216,.13)}
+.sform input:user-invalid{border-color:#C0392B}
+.sform .btn{width:100%;margin-top:6px}
+.sform-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.sform-note{margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.04em;
+  color:#7E97B4;text-align:center;line-height:1.7}
+.sform-msg{margin-top:16px;padding:14px 16px;border-radius:10px;font-size:15px;line-height:1.55;display:none}
+.sform-msg.show{display:block}
+.sform-msg.ok{background:var(--mist);border:1px solid var(--sky);color:var(--ink)}
+.sform-msg.err{background:#FDF0EE;border:1px solid #E8B4AE;color:#8C2E20}
+.sform.sent .sform-row,.sform.sent .btn,.sform.sent .sform-note{display:none}
+
+/* ============================================================
    NAV
    ============================================================ */
 .nav{
@@ -173,7 +198,7 @@ p{margin:0}
   letter-spacing:.12em;color:#94ABC6;
 }
 .stage{position:relative;aspect-ratio:4/5;background:#0A1A2E;overflow:hidden}
-/* both hero assets are true 4:5, so they fill the well exactly: no crop, no bars */
+/* hero assets match the well exactly: no crop, no bars */
 .stage > *{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .stage video{opacity:0;transition:opacity .45s ease}
 .sim[data-mode="loop"] .stage video{opacity:1}
@@ -234,12 +259,22 @@ p{margin:0}
 }
 @media(max-width:820px){.reel{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:480px){.reel{grid-template-columns:1fr;max-width:340px;margin:0 auto}}
-/* every well is 4:5, the ratio the renders ship in */
+/* media wells share one shape so the reel reads as a set */
 .clip{aspect-ratio:4/5}
-/* unused now that every clip is 4:5. Add class="fit" to a card if you ever drop
-   in a clip at another ratio and want it shown whole rather than cropped. */
+/* add class="fit" to a card if a clip is a different shape from the well
+   and you want it shown whole rather than cropped. */
 .clip.fit video{object-fit:contain;background:#050F1E}
-.clip-ratio{position:absolute;left:12px;top:12px;font-family:var(--mono);font-size:10px;letter-spacing:.13em;color:var(--sky-soft);background:rgba(7,27,51,.7);padding:4px 7px;border-radius:5px;backdrop-filter:blur(6px)}
+/* slot 6: an open invitation rather than an empty cell */
+.clip-open{
+  aspect-ratio:4/5;border:1.5px dashed var(--line);border-radius:var(--r);background:var(--paper);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+  text-align:center;padding:26px;text-decoration:none;transition:border-color .2s,background .2s,transform .2s;
+}
+.clip-open:hover{border-color:var(--blue);background:var(--mist);transform:translateY(-3px)}
+.clip-open-mark{width:46px;height:46px;border-radius:50%;background:var(--white);border:1px solid var(--sky);
+  display:grid;place-items:center;color:var(--blue);font-size:24px;line-height:1;font-family:var(--display)}
+.clip-open-t{font-family:var(--display);font-weight:600;font-size:18px;letter-spacing:-.02em;color:var(--ink)}
+.clip-open-n{font-size:14px;color:var(--body);line-height:1.5;max-width:22ch}
 
 .loader{
   margin-top:28px;border:1px dashed var(--line);border-radius:var(--r);background:var(--white);
@@ -282,7 +317,7 @@ code{font-family:var(--mono);font-size:12.5px;background:var(--mist);padding:2px
 /* ============================================================
    PRICING
    ============================================================ */
-.tiers{display:grid;grid-template-columns:repeat(2,1fr);gap:26px;align-items:stretch;max-width:880px;margin:0 auto}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:stretch}
 .tier{border:1px solid var(--line);border-radius:var(--r);background:var(--white);padding:30px 28px;display:flex;flex-direction:column;height:100%}
 .tier.feature{border-color:var(--blue);box-shadow:var(--shadow);position:relative}
 .tier-flag{
@@ -302,18 +337,43 @@ code{font-family:var(--mono);font-size:12.5px;background:var(--mist);padding:2px
 .tier li::after{content:"";position:absolute;left:4.5px;top:11px;width:5px;height:5px;border-radius:50%;background:var(--blue)}
 .tier .btn{margin-top:auto;width:100%}
 @media(max-width:820px){.tiers{grid-template-columns:1fr}}
-/* package type switch */
-.ptabs{display:flex;justify-content:center;margin:0 auto 34px;padding:5px;gap:4px;
-  background:var(--white);border:1px solid var(--line);border-radius:12px;
-  box-shadow:var(--shadow-sm);width:fit-content;max-width:100%}
-.ptabs button{border:0;background:transparent;cursor:pointer;padding:11px 22px;border-radius:9px;
-  font-family:var(--text);font-weight:600;font-size:14.5px;color:var(--body);
-  display:flex;align-items:center;gap:9px;transition:background .18s,color .18s;white-space:nowrap}
-.ptabs button:hover{color:var(--blue)}
-.ptabs button[aria-selected="true"]{background:var(--ink);color:var(--white)}
-.ptabs .ptab-sub{font-family:var(--mono);font-size:10px;letter-spacing:.09em;opacity:.7;text-transform:uppercase}
-@media(max-width:520px){.ptabs{width:100%}.ptabs button{flex:1;justify-content:center;padding:11px 10px;font-size:13.5px}.ptabs .ptab-sub{display:none}}
-[role="tabpanel"][hidden]{display:none}
+.case{display:grid;grid-template-columns:1.35fr 1fr;gap:44px;align-items:start}
+.case-lead{font-family:var(--display);font-weight:600;font-size:clamp(20px,2.4vw,25px);letter-spacing:-.02em;line-height:1.35;margin-bottom:20px}
+.case-p{font-size:16.5px;color:var(--body);line-height:1.68;margin-bottom:16px}
+.case-kicker{margin-top:24px;padding-left:18px;border-left:3px solid var(--sky);font-family:var(--display);font-weight:600;font-size:19px;letter-spacing:-.02em;line-height:1.4}
+.case-nums{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.case-num{background:var(--white);padding:24px 24px 26px}
+.case-n{display:block;font-family:var(--display);font-weight:800;font-size:clamp(30px,3.6vw,38px);letter-spacing:-.04em;color:var(--blue);line-height:1}
+.case-l{display:block;margin-top:10px;font-size:14.5px;color:var(--body);line-height:1.5}
+@media(max-width:900px){.case{grid-template-columns:1fr;gap:34px}}
+
+/* one-time catalog build */
+.build{display:grid;grid-template-columns:1.5fr 1fr;gap:0;border:1px solid var(--blue);border-radius:var(--r);
+  overflow:hidden;box-shadow:var(--shadow);margin-bottom:64px;background:var(--white)}
+.build-body{padding:34px 34px 30px}
+.build-cta{padding:34px;background:var(--mist);display:flex;flex-direction:column;justify-content:center;
+  border-left:1px solid var(--line);text-align:center}
+.build-price{font-family:var(--display);font-weight:800;font-size:clamp(38px,5vw,52px);letter-spacing:-.04em;margin:12px 0 4px}
+.build-pitch{margin:18px 0 20px;font-size:16.5px;color:var(--ink);line-height:1.6;padding-left:16px;border-left:3px solid var(--sky)}
+.build-list{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.build-list li{position:relative;padding-left:26px;font-size:15px;color:var(--body);line-height:1.55}
+.build-list li::before{content:"";position:absolute;left:0;top:7px;width:14px;height:14px;border-radius:50%;
+  background:var(--mist);border:1px solid var(--sky)}
+.build-list li::after{content:"";position:absolute;left:4.5px;top:11px;width:5px;height:5px;border-radius:50%;background:var(--blue)}
+@media(max-width:820px){.build{grid-template-columns:1fr}.build-cta{border-left:0;border-top:1px solid var(--line)}}
+
+.tier-head{font-size:clamp(24px,3vw,32px);text-align:center;margin-bottom:8px}
+.tier-sub-head{text-align:center;color:var(--body);font-size:16px;margin-bottom:36px}
+.tier-per{font-family:var(--text);font-weight:600;font-size:17px;letter-spacing:0;color:var(--body)}
+
+/* risk reversal */
+.guards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:56px}
+.guard{background:var(--white);padding:26px 24px 28px}
+.guard-k{font-family:var(--mono);font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);display:block;margin-bottom:13px}
+.guard-v{font-family:var(--display);font-weight:600;font-size:19px;letter-spacing:-.02em;line-height:1.25}
+.guard-n{margin-top:10px;font-size:15px;color:var(--body);line-height:1.6}
+@media(max-width:820px){.guards{grid-template-columns:1fr}}
 .tier-rate{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--blue);margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
 .tier-save{display:inline-block;margin-left:8px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-deep);background:var(--mist);padding:3px 8px;border-radius:20px;vertical-align:middle}
 
@@ -382,13 +442,13 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
       Yeltis
     </a>
     <nav class="nav-links">
-      <a href="#proof">Why it works</a>
+      <a href="#case">Why it matters</a>
       <a href="#samples">Samples</a>
       <a href="#process">Process</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <a class="btn btn-primary btn-sm" href="#start">Get a free sample render</a>
+    <a class="btn btn-primary btn-sm" href="#start">Get a free sample</a>
   </div>
 </header>
 
@@ -396,17 +456,17 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
 <section class="hero" id="top">
   <div class="wrap hero-grid">
     <div>
-      <span class="eyebrow">4:5 looping renders for Shopify PDPs</span>
-      <h1>Get your product photos moving. <em>Your cart moves with them.</em></h1>
-      <p class="lead">Yeltis turns the product photography you already own into looping product video. Every video is formatted to 4:5 vertical at 1080 x 1350 px, the ratio Shopify's product media gallery is built around, so the file drops into your gallery and fills the frame with no cropping and no letterboxing. No app, no subscription, no player script slowing your store down.</p>
+      <span class="eyebrow">Model turnaround video for Shopify boutiques</span>
+      <h1>Every garment in motion. <em>Without booking a shoot.</em></h1>
+      <p class="lead">Your product photos are already on a model. Yeltis turns those same stills into a full turnaround for every SKU: front, profile, back and return, with the garment moving the way it actually moves. Delivered in the format your Shopify theme uses, so it drops into your gallery and sits exactly where your product images already do. No shoot, no models, no samples shipped.</p>
       <div class="hero-cta">
-        <a class="btn btn-primary" href="#start">Get a free sample render</a>
-        <a class="btn btn-ghost" href="#samples">Watch the sample reel</a>
+        <a class="btn btn-primary" href="#start">Get a free sample</a>
+        <a class="btn btn-ghost" href="#samples">See the reel</a>
       </div>
       <div class="hero-note">
         <span>48 hour delivery</span>
         <span>Zero physical shipping</span>
-        <span>From $16.23 per SKU</span>
+        <span>From $8.31 per SKU</span>
       </div>
     </div>
 
@@ -419,7 +479,7 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
       <div class="phone">
         <div class="phone-bar">yourstore.myshopify.com</div>
         <div class="stage">
-          <img class="still" src="hero-still.jpg" alt="Static product photo of the dress, as it appears in a normal Shopify gallery">
+          <img class="still" src="hero-still.jpg" alt="The kind of still product photo already on a boutique product page">
           <video data-slot="hero" src="hero-loop.mp4" poster="hero-loop.jpg" muted loop playsinline autoplay preload="auto" aria-label="Model turnaround render of the same dress"></video>
           <span class="stage-tag" id="stageTag">Looping video &middot; muted</span>
         </div>
@@ -475,9 +535,9 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
 
     <div class="why">
       <div class="why-card">
-        <span class="why-idx">01 / CONVERSION</span>
-        <h3>It closes the imagination gap.</h3>
-        <p>A still asks the buyer to imagine scale, texture and finish. Motion answers those questions before they get asked, which is why video sits on the conversion line rather than the brand-awareness line.</p>
+        <span class="why-idx">01 / FIT</span>
+        <h3>It answers "how will this sit on me?"</h3>
+        <p>A still shows her the garment. It still asks her to imagine the length, the drape, how it moves when the wearer does. A turnaround answers all three before she has to ask, which is why apparel video sits on the conversion line rather than the brand-awareness line.</p>
       </div>
       <div class="why-card">
         <span class="why-idx">02 / RETENTION</span>
@@ -485,13 +545,37 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
         <p>On mobile, an image carousel is something to get past. A clip that is already playing is something to watch, and time on the page is the input every other product page metric depends on.</p>
       </div>
       <div class="why-card">
-        <span class="why-idx">03 / TRUST</span>
-        <h3>It reads as a real business.</h3>
-        <p>89% of consumers say video quality shapes their trust in a brand. Ambient product motion is what category leaders ship, and a store that has it is quietly telling the buyer that someone is home.</p>
+        <span class="why-idx">03 / DIFFERENTIATION</span>
+        <h3>It separates you from the same dress.</h3>
+        <p>Boutiques often carry the same wholesale styles as a dozen competitors, with the same supplier photography. A garment shown moving on a model is the one asset your competitors are not also using.</p>
       </div>
     </div>
 
     <p class="tiny" style="margin-top:34px;max-width:800px">Figures above are published third-party benchmarks describing other merchants and other studies, not a forecast for your store. The add-to-cart figure in particular is a ceiling: real-world lift for mid-market ecommerce more typically lands in the 20 to 60% range, which is still a strong return on a $25 asset. Results depend on your traffic, offer, price point and placement.</p>
+  </div>
+</section>
+
+<!-- ============================ THE CASE ============================ -->
+<section class="sec tint" id="case">
+  <div class="wrap">
+    <div class="sec-head" style="max-width:760px">
+      <span class="eyebrow">Why it matters</span>
+      <h2>She is not comparing dresses. She is choosing where to shop.</h2>
+    </div>
+    <div class="case">
+      <div class="case-body">
+        <p class="case-lead">Her decision is rarely your black dress against the black dress down the street. It is which site she is still browsing twenty minutes from now.</p>
+        <p class="case-p">A page of stills gets scanned. A page where the garments move gets watched. Product pages with moving imagery hold attention 50 to 80% longer, and shoppers who watch product video are reported to convert at roughly two to four times the rate of those who do not.</p>
+        <p class="case-p">That extra time is where the money is. The average fashion order is 1.74 items. Getting a browser to a second piece is not a small optimisation, and it happens for a reason that has nothing to do with discounting: she stayed long enough to find something else she liked.</p>
+        <p class="case-kicker">The boutique down the street is asking her to imagine.<br>You would be showing her.</p>
+      </div>
+      <div class="case-nums">
+        <div class="case-num"><span class="case-n">50-80%</span><span class="case-l">longer on the product page with moving imagery</span></div>
+        <div class="case-num"><span class="case-n">27-35%</span><span class="case-l">higher conversion, moving versus static, same product</span></div>
+        <div class="case-num"><span class="case-n">1.74</span><span class="case-l">items in the average fashion order, so the second one counts</span></div>
+      </div>
+    </div>
+    <p class="tiny" style="margin-top:26px;max-width:820px">Published benchmarks from other retailers, not a forecast for your store. Results depend on your traffic, your pricing and where the video sits in your gallery.</p>
   </div>
 </section>
 
@@ -500,63 +584,57 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Sample reel</span>
-      <h2>Real work, at the real ratio.</h2>
-      <p class="lead">Real renders from real catalogs, playing at the size and ratio they ship in. Ambient scene motion for products that sit still, full model turnarounds for anything worn. Frame 0 opens at full brightness, so there is no dark flash while your gallery loads.</p>
+      <h2>Real garments. Real turnarounds.</h2>
+      <p class="lead">Every one of these started as flat product photography. No shoot, no model booking, no sample shipped. They play here at the exact size and ratio they arrive in, and frame 0 opens at full brightness so your gallery never flashes dark while it loads.</p>
     </div>
 
     <div class="reel" id="reel">
       <div class="clip">
-        <video data-slot="1" src="loop-skincare.mp4" poster="loop-skincare.jpg" muted loop playsinline autoplay preload="none" aria-label="Skincare looping product render"></video>
-        <span class="clip-ratio">1080 &times; 1350</span>
-        <div class="clip-meta"><span>Skincare</span><span>4:5 &middot; 5.5s</span></div>
+        <video data-slot="1" src="loop-cotton-island.mp4" poster="loop-cotton-island.jpg" muted loop playsinline autoplay preload="none" aria-label="Maxi dress model turnaround render"></video>
+        <div class="clip-meta"><span>Maxi dress</span><span>9.8s</span></div>
       </div>
       <div class="clip">
-        <video data-slot="2" src="loop-chili-crisp.mp4" poster="loop-chili-crisp.jpg" muted loop playsinline autoplay preload="none" aria-label="Chili crisp looping product render"></video>
-        <span class="clip-ratio">1080 &times; 1350</span>
-        <div class="clip-meta"><span>Chili crisp</span><span>4:5 &middot; 4.5s</span></div>
+        <video data-slot="2" src="loop-roxanne.mp4" poster="loop-roxanne.jpg" muted loop playsinline autoplay preload="none" aria-label="Midi dress model turnaround render"></video>
+        <div class="clip-meta"><span>Midi dress</span><span>8.0s</span></div>
       </div>
       <div class="clip">
-        <video data-slot="3" src="loop-coffee.mp4" poster="loop-coffee.jpg" muted loop playsinline autoplay preload="none" aria-label="Coffee looping product render"></video>
-        <span class="clip-ratio">1080 &times; 1350</span>
-        <div class="clip-meta"><span>Coffee</span><span>4:5 &middot; 7.0s</span></div>
+        <video data-slot="3" src="loop-mini.mp4" poster="loop-mini.jpg" muted loop playsinline autoplay preload="none" aria-label="Mini dress model turnaround render"></video>
+        <div class="clip-meta"><span>Mini dress</span><span>10.0s</span></div>
       </div>
       <div class="clip">
-        <video data-slot="4" src="loop-supplement.mp4" poster="loop-supplement.jpg" muted loop playsinline autoplay preload="none" aria-label="Supplement looping product render"></video>
-        <span class="clip-ratio">1080 &times; 1350</span>
-        <div class="clip-meta"><span>Supplement</span><span>4:5 &middot; 7.8s</span></div>
+        <video data-slot="4" src="loop-floral.mp4" poster="loop-floral.jpg" muted loop playsinline autoplay preload="none" aria-label="Mini dress model turnaround render"></video>
+        <div class="clip-meta"><span>Mini dress</span><span>10.0s</span></div>
       </div>
       <div class="clip">
-        <video data-slot="5" src="loop-balsamic.mp4" poster="loop-balsamic.jpg" muted loop playsinline autoplay preload="none" aria-label="Balsamic looping product render"></video>
-        <span class="clip-ratio">1080 &times; 1350</span>
-        <div class="clip-meta"><span>Balsamic</span><span>4:5 &middot; 6.0s</span></div>
+        <video data-slot="5" src="loop-model.mp4" poster="loop-model.jpg" muted loop playsinline autoplay preload="none" aria-label="Blouse model turnaround render"></video>
+        <div class="clip-meta"><span>Blouse</span><span>10.0s</span></div>
       </div>
       <div class="clip">
-        <video data-slot="6" src="loop-model.mp4" poster="loop-model.jpg" muted loop playsinline autoplay preload="none" aria-label="Apparel looping product render"></video>
-        <span class="clip-ratio">1080 &times; 1350</span>
-        <div class="clip-meta"><span>Apparel turnaround</span><span>4:5 &middot; 10.0s</span></div>
+        <video data-slot="6" src="loop-jacket.mp4" poster="loop-jacket.jpg" muted loop playsinline autoplay preload="none" aria-label="Denim jacket model turnaround render"></video>
+        <div class="clip-meta"><span>Denim jacket</span><span>10.0s</span></div>
       </div>
     </div>
 
     <div class="cats">
       <div class="cat">
-        <span class="cat-k">Skincare</span>
-        <div class="cat-v">Rolling mist</div>
-        <p class="cat-n">Slow low fog across the base of the frame. Reads as hydration without touching the bottle.</p>
+        <span class="cat-k">Dresses</span>
+        <div class="cat-v">Skirt movement</div>
+        <p class="cat-n">The turn is where a hem earns its price. Flare, swing and how far it actually moves, none of which a still can show.</p>
       </div>
       <div class="cat">
-        <span class="cat-k">Coffee &amp; tea</span>
-        <div class="cat-v">Rising steam</div>
-        <p class="cat-n">Warm vapour lifting off the top of the product. Sells freshness in under a second.</p>
+        <span class="cat-k">Outerwear</span>
+        <div class="cat-v">Fit and structure</div>
+        <p class="cat-n">Shoulder line, sleeve break, how it sits closed and open. The questions that drive outerwear returns.</p>
       </div>
       <div class="cat">
-        <span class="cat-k">Oils &amp; pantry</span>
-        <div class="cat-v">Sunlit orchard</div>
-        <p class="cat-n">Dappled light moving through leaves behind the bottle. Origin story, no copy required.</p>
+        <span class="cat-k">Tops &amp; knits</span>
+        <div class="cat-v">Drape and cling</div>
+        <p class="cat-n">Whether it skims or clings is the whole decision, and it is invisible in a still.</p>
       </div>
       <div class="cat">
-        <span class="cat-k">Apparel</span>
-        <div class="cat-v">Model turnaround</div>
-        <p class="cat-n">Front, profile, back and return, with the garment moving through the turn. Answers the fit and drape questions that drive apparel returns.</p>
+        <span class="cat-k">Every SKU</span>
+        <div class="cat-v">Front, profile, back</div>
+        <p class="cat-n">A full rotation on every garment, so the back view stops being the thing nobody photographs.</p>
       </div>
     </div>
 
@@ -586,37 +664,37 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">How it works</span>
-      <h2>Send photos. Get files. Upload them.</h2>
-      <p class="lead">Three steps, and only one of them is yours. Nothing ships, nothing installs on your store, and nothing bills you monthly.</p>
+      <h2>Send links. Get files. Upload them.</h2>
+      <p class="lead">Three steps, and only one of them is yours. Nothing ships, nothing installs on your store, and we never touch your admin, your ads or your credentials.</p>
     </div>
 
     <div class="steps">
       <div class="step">
         <div class="step-n">Step 01</div>
-        <h3>You send the photos you already have</h3>
-        <p>Your product URLs or a folder of studio shots is enough. Nothing gets shipped, boxed, insured or waited on. If the images are already live on your store, we can work straight from those.</p>
+        <h3>You send the product links</h3>
+        <p>A collection URL or a list of product pages is enough. We pull the front and back images already live on your store. Nothing gets shipped, boxed, insured or waited on, and no sample leaves your stockroom.</p>
       </div>
       <div class="step">
         <div class="step-n">Step 02</div>
-        <h3>We build the loop</h3>
-        <p>Each SKU gets its own 1080p render, formatted to 4:5 at 1080 x 1350 px so it is compatible with the Shopify gallery out of the box, Product SKUs get ambient scene motion chosen for the category. Garments get a full model turnaround so fit and drape read on camera. Back in 48 hours, or 24 on the catalog package.</p>
+        <h3>We put it into motion</h3>
+        <p>Your still becomes a full rotation: front to profile to back and home again, with the fabric moving through the turn. Same model, same styling, now moving. Drops come back in 48 hours. A hundred-SKU catalog build takes about a week.</p>
       </div>
       <div class="step">
         <div class="step-n">Step 03</div>
         <h3>You upload it to the product</h3>
-        <p>Standard H.264 MP4, so it drops straight into Products &gt; Media in your Shopify admin next to the images. Catalog orders arrive as a single ZIP named to match your SKUs.</p>
+        <p>Standard H.264 MP4, so it drops straight into Products &gt; Media next to your existing images. Batches arrive as one ZIP named to match your SKUs, so uploading a whole drop is a drag and drop, not an afternoon.</p>
       </div>
     </div>
 
     <div class="spec">
       <div class="spec-head">Delivery specification</div>
-      <div class="spec-row"><div class="spec-k">Resolution</div><div class="spec-v">1080p, native 4:5 vertical at 1080 x 1350 px. Every video is formatted to 4:5 to guarantee compatibility with Shopify product galleries, so it fills the frame on mobile without cropping or letterboxing</div></div>
-      <div class="spec-row"><div class="spec-k">Motion &middot; product</div><div class="spec-v">Category-tailored ambient scene motion, selected per SKU. Rolling mist for skincare, rising steam for coffee, sunlit orchard light for oils</div></div>
-      <div class="spec-row"><div class="spec-k">Motion &middot; fashion</div><div class="spec-v">Full model turnaround. Front, profile, back and return, with hem, drape and sleeve movement carried through the rotation</div></div>
+      <div class="spec-row"><div class="spec-k">Resolution</div><div class="spec-v">1080p vertical, cut to match the format your Shopify theme uses so your gallery never crops the render. Send us your store and we will check it</div></div>
+      <div class="spec-row"><div class="spec-k">Motion</div><div class="spec-v">Full model turnaround. Front, profile, back and return, with hem, drape and sleeve movement carried through the rotation</div></div>
+      <div class="spec-row"><div class="spec-k">Source</div><div class="spec-v">Your existing product photography. Front and back images give the best result; a single front shot still works</div></div>
       <div class="spec-row"><div class="spec-k">Frame 0</div><div class="spec-v">Opens at full brightness. No fade up, no dark first frame when the gallery paints</div></div>
       <div class="spec-row"><div class="spec-k">Audio</div><div class="spec-v">None. Product page media autoplays muted, so a soundtrack is dead weight</div></div>
-      <div class="spec-row"><div class="spec-k">File</div><div class="spec-v">Standard H.264 MP4 under 1 MB per clip, with faststart enabled so the gallery paints immediately. Uploads directly under Products &gt; Media in Shopify admin</div></div>
-      <div class="spec-row"><div class="spec-k">Turnaround</div><div class="spec-v">48 hours on the 20 pack, 24 hours priority on the 80 pack</div></div>
+      <div class="spec-row"><div class="spec-k">File</div><div class="spec-v">Standard H.264 MP4, typically 2 to 5 MB per clip, well inside Shopify's 1 GB limit. Faststart enabled so the gallery paints immediately. Uploads directly under Products &gt; Media in Shopify admin</div></div>
+      <div class="spec-row"><div class="spec-k">Turnaround</div><div class="spec-v">48 hours on a monthly drop. About one week for a 100 SKU catalog build, delivered as one ZIP</div></div>
       <div class="spec-row"><div class="spec-k">Shipping</div><div class="spec-v">None. Zero physical product required at any stage</div></div>
       </div>
   </div>
@@ -627,87 +705,100 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
   <div class="wrap">
     <div class="sec-head" style="text-align:center;margin-left:auto;margin-right:auto">
       <span class="eyebrow">Pricing</span>
-      <h2>Two packages. One payment. Files are yours.</h2>
-      <p class="lead" style="margin:0 auto">You are buying assets, not renting a widget. No monthly fee, no app subscription, and nothing that switches off if you stop paying, because there is nothing to stop paying.</p>
+      <h2>Build the catalog once. Cover every drop after.</h2>
+      <p class="lead" style="margin:0 auto">Most boutiques start with the catalog build to get their existing range on a model, then keep a drop retainer running so every new arrival lands with video already on it.</p>
     </div>
 
-    <div class="ptabs" role="tablist" aria-label="Package type">
-      <button role="tab" id="tab-product" aria-controls="panel-product" aria-selected="true" type="button">
-        Product <span class="ptab-sub">from $16.23</span>
-      </button>
-      <button role="tab" id="tab-fashion" aria-controls="panel-fashion" aria-selected="false" type="button">
-        Fashion <span class="ptab-sub">from $19.49</span>
-      </button>
+    <!-- ONE-TIME -->
+    <div class="build">
+      <div class="build-body">
+        <span class="tier-name">Catalog Build &middot; one time</span>
+        <div class="build-price">$1,497</div>
+        <div class="tier-sub">Your top 100 SKUs &middot; $14.97 per garment</div>
+        <p class="build-pitch">Less than one photoshoot. A day of studio, model and photographer gets you stills for maybe thirty pieces. This gets you video for a hundred.</p>
+        <ul class="build-list">
+          <li>100 model turnaround videos, one per garment</li>
+          <li>1080p vertical, matched to your theme&rsquo;s format</li>
+          <li>Delivered as one ZIP named to match your SKUs</li>
+          <li>About one week end to end</li>
+        </ul>
+      </div>
+      <div class="build-cta">
+        <a class="btn btn-primary" href="https://buy.stripe.com/14AeVdh1s37k0ugd3Lebu04" target="_blank" rel="noopener">Get started</a>
+        <p class="tiny" style="margin-top:14px">Not ready? <a href="#start" style="color:var(--blue)">Get one garment rendered free</a> first.</p>
+      </div>
     </div>
 
-    <div class="tiers" role="tabpanel" id="panel-product" aria-labelledby="tab-product">
+    <!-- RECURRING -->
+    <h3 class="tier-head">Drop Retainer &middot; monthly</h3>
+    <p class="tier-sub-head">New arrivals covered as they land, so nothing goes live with stills alone.</p>
+
+    <div class="tiers">
       <div class="tier">
-        <div class="tier-name">20 Product Package</div>
-        <div class="tier-price">$499</div>
-        <div class="tier-sub">One time &middot; up to 20 SKUs</div>
+        <div class="tier-name">Small drop</div>
+        <div class="tier-price">$497<span class="tier-per">/mo</span></div>
+        <div class="tier-sub">20 new SKUs a month</div>
         <ul>
-          <li>All videos formatted to 4:5 vertical at 1080 x 1350 px for guaranteed Shopify compatibility</li>
-          <li>Category-tailored ambient motion, matched to what the product is</li>
-          <li>Instant full-brightness frame 0</li>
-          <li>Standard H.264 MP4, ready for Products &gt; Media</li>
-          <li>48 hour delivery, zero physical shipping</li>
+          <li>20 model turnaround videos every month</li>
+          <li>48 hour turnaround on each drop</li>
+          <li>Extra garments at $35 each</li>
+          <li>Month to month, cancel any time</li>
+          <li><strong>First month refunded if it is not worth it</strong></li>
         </ul>
-        <div class="tier-rate">$25.00 PER SKU</div>
-        <a class="btn btn-ghost" href="#start" style="margin-top:22px">Start the 20 pack</a>
+        <div class="tier-rate">$24.85 PER GARMENT</div>
+        <a class="btn btn-ghost" href="https://buy.stripe.com/bJe9AT3aC37k0ug5Bjebu05" target="_blank" rel="noopener" style="margin-top:22px">Get started</a>
       </div>
-      <div class="tier feature">
-        <span class="tier-flag">Best value</span>
-        <div class="tier-name">80 Product Full Catalog</div>
-        <div class="tier-price">$1,299<span class="tier-save">Saves $697</span></div>
-        <div class="tier-sub">One time &middot; up to 80 SKUs</div>
-        <ul>
-          <li>All videos formatted to 4:5 vertical at 1080 x 1350 px for guaranteed Shopify compatibility</li>
-          <li>Category-tailored motion plus custom background scene options on every SKU</li>
-          <li>Instant full-brightness frame 0</li>
-          <li>Standard H.264 MP4, ready for Products &gt; Media</li>
-          <li>Priority 24 hour turnaround, bulk ZIP delivery</li>
-        </ul>
-        <div class="tier-rate">$16.23 PER SKU</div>
-        <a class="btn btn-primary" href="#start" style="margin-top:22px">Do the whole catalog</a>
-      </div>
-    </div>
 
-    <div class="tiers" role="tabpanel" id="panel-fashion" aria-labelledby="tab-fashion" hidden>
+      <div class="tier feature">
+        <span class="tier-flag">Most boutiques</span>
+        <div class="tier-name">Standard drop</div>
+        <div class="tier-price">$997<span class="tier-per">/mo</span></div>
+        <div class="tier-sub">50 new SKUs a month</div>
+        <ul>
+          <li>50 model turnaround videos every month</li>
+          <li>48 hour turnaround on each drop</li>
+          <li>Extra garments at $35 each</li>
+          <li>Month to month, cancel any time</li>
+        </ul>
+        <div class="tier-rate">$19.94 PER GARMENT</div>
+        <a class="btn btn-primary" href="https://buy.stripe.com/28E3cv3aC7nA7WIgfXebu06" target="_blank" rel="noopener" style="margin-top:22px">Get started</a>
+      </div>
+
       <div class="tier">
-        <div class="tier-name">20 Garment Package</div>
-        <div class="tier-price">$599</div>
-        <div class="tier-sub">One time &middot; up to 20 SKUs</div>
+        <div class="tier-name">Full drop</div>
+        <div class="tier-price">$1,997<span class="tier-per">/mo</span></div>
+        <div class="tier-sub">120 new SKUs a month</div>
         <ul>
-          <li>All videos formatted to 4:5 vertical at 1080 x 1350 px for guaranteed Shopify compatibility</li>
-          <li>Full model turnaround: front, profile, back and return</li>
-          <li>Garment motion captured through the turn, so hem, drape and flutter read on camera</li>
-          <li>Instant full-brightness frame 0</li>
-          <li>Standard H.264 MP4, ready for Products &gt; Media</li>
-          <li>48 hour delivery, zero physical shipping</li>
+          <li>120 model turnaround videos every month</li>
+          <li>48 hour turnaround on each drop</li>
+          <li>Extra garments at $35 each</li>
+          <li>Month to month, cancel any time</li>
         </ul>
-        <div class="tier-rate">$29.95 PER SKU</div>
-        <a class="btn btn-ghost" href="#start" style="margin-top:22px">Start the 20 pack</a>
-      </div>
-      <div class="tier feature">
-        <span class="tier-flag">Best value</span>
-        <div class="tier-name">80 Garment Full Catalog</div>
-        <div class="tier-price">$1,559<span class="tier-save">Saves $837</span></div>
-        <div class="tier-sub">One time &middot; up to 80 SKUs</div>
-        <ul>
-          <li>All videos formatted to 4:5 vertical at 1080 x 1350 px for guaranteed Shopify compatibility</li>
-          <li>Full model turnaround on every SKU</li>
-          <li>Garment motion captured through the turn, so hem, drape and flutter read on camera</li>
-          <li>Colourway variants of the same garment priced as one SKU</li>
-          <li>Instant full-brightness frame 0</li>
-          <li>Standard H.264 MP4, ready for Products &gt; Media</li>
-          <li>Priority 24 hour turnaround, bulk ZIP delivery</li>
-        </ul>
-        <div class="tier-rate">$19.49 PER SKU</div>
-        <a class="btn btn-primary" href="#start" style="margin-top:22px">Do the whole catalog</a>
+        <div class="tier-rate">$16.64 PER GARMENT</div>
+        <a class="btn btn-ghost" href="https://buy.stripe.com/28EeVd8uWgYab8UbZHebu07" target="_blank" rel="noopener" style="margin-top:22px">Get started</a>
       </div>
     </div>
 
-    <p class="tiny" id="priceNote" style="margin-top:26px;text-align:center;max-width:760px;margin-left:auto;margin-right:auto">Product packages cover anything that sits still: bottles, jars, bags, hard goods. Fashion packages cover anything worn, and carry a full model turnaround instead of ambient scene motion, which is a longer build. Savings shown against each range's own 20 pack rate. Either way, the first render is free on a product you choose.</p>
+    <p class="tiny" style="margin-top:24px;text-align:center;max-width:720px;margin-left:auto;margin-right:auto">Want to see it on your own garment first? <a href="#start" style="color:var(--blue)">Get a free render</a>, no card needed. Prepay a year and get two months free. Move up or down one tier each quarter at no penalty. Overage is billed at $35 per garment, so a heavy month never blocks a launch. The money-back guarantee applies to the 20 garment plan, which is where we suggest starting if you want it.</p>
+
+    <!-- RISK REVERSAL -->
+    <div class="guards">
+      <div class="guard">
+        <span class="guard-k">Before you pay</span>
+        <div class="guard-v">A free sample on your own garment</div>
+        <p class="guard-n">Send one product link. We render it and send it back. You see your own piece moving on a model before a card is ever entered.</p>
+      </div>
+      <div class="guard">
+        <span class="guard-k">After you start</span>
+        <div class="guard-v">First month back on the 20 garment plan</div>
+        <p class="guard-n">Start on the small drop and if the first month of renders is not worth what you paid, tell us and we refund it. No form, no retention call, no explanation required. Move up a tier whenever you are ready.</p>
+      </div>
+      <div class="guard">
+        <span class="guard-k">The whole time</span>
+        <div class="guard-v">No lock-in, no access needed</div>
+        <p class="guard-n">Month to month. We never ask for your Shopify login, your ad accounts or any credential. You upload the files yourself.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -722,36 +813,50 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
     </div>
     <div class="faq">
       <details open>
+        <summary>Do you need the physical garment?</summary>
+        <p>No. Nothing ships. We work from the product photography already live on your store. A front and a back image gives the best result, because the back view is the one your supplier photos usually get right and your competitors never show. A single front shot still works.</p>
+      </details>
+      <details>
         <summary>Will this slow my product page down?</summary>
-        <p>It should not. Every clip ships under 1 MB, which is smaller than a single unoptimised product photo on most stores. They are standard H.264 MP4 files sitting in Shopify's own product media, so there is no third-party player script and no app, which is where most video solutions actually cost you speed. Frame 0 opens at full brightness, so the gallery never shows a dark square while the file loads.</p>
+        <p>No. Shopify's own limit for a product video is 1 GB and 10 minutes. These clips run a few megabytes and a few seconds, so they are nowhere near it. The widely quoted 20 MB cap is for the Files page, not the product gallery.</p>
+        <p>Shopify also re-encodes every uploaded video through its own delivery pipeline and streams 480p, 720p or 1080p depending on the shopper's connection. What we hand you is already in line with what Shopify would serve anyway, so compressing it further before upload gains nothing.</p>
+        <p>The bigger factor for real page speed is how the video is embedded. Native Shopify product media adds no extra script. Some hover-video and shoppable-video apps do, and that is usually where the load time actually goes.</p>
       </details>
       <details>
-        <summary>Do I have to ship you the product?</summary>
-        <p>No. Zero physical shipping at any stage. We work from the product photography already on your store, so there is no box, no courier, no insurance and no week of waiting before anything starts.</p>
+        <summary>I already get model photos from my wholesaler. Why do I need video?</summary>
+        <p>Those photos do their job, and the video is built from them, so the model and styling stay consistent with what is already on your page. What changes is that the garment moves.</p>
+        <p>That matters because a page of stills gets scanned and a page of moving garments gets watched. Product pages with rotating imagery hold attention 50 to 80% longer, and studies comparing rotating to static imagery of the same product cluster at 27 to 35% higher conversion. She can see the hem swing, how the fabric falls, what the back looks like in motion. The questions a still leaves open.</p>
+        <p>There is a second reason worth knowing. Those four images ship with the style, so every boutique carrying that piece is running the same frames. The video is the one asset on your product page that nobody else selling it will have.</p>
       </details>
       <details>
-        <summary>Why does fashion cost more?</summary>
-        <p>A product render animates the scene around a stationary object. A garment render has to move the garment itself through a full turn while the fit, drape and fall of the fabric stay believable frame to frame. It is a longer build with more that can go wrong, so it carries a 20% premium: $29.95 per SKU against $25.00, or $19.49 against $16.23 at catalog volume.</p>
+        <summary>Will this actually change my numbers?</summary>
+        <p>The measured effects show up in three places, all upstream of revenue.</p>
+        <p><strong>Time on page.</strong> Moving product imagery roughly doubles engagement time against static galleries, with published figures at 50 to 80% longer. A shopper who lingers on one product page is a shopper who opens another.</p>
+        <p><strong>Conversion.</strong> Rotating versus static imagery on the same product lands at 27 to 35% higher conversion across published studies. Shoppers who watch product video are reported to convert at two to four times the rate of those who do not.</p>
+        <p><strong>Basket size.</strong> The average fashion order is 1.74 items. Anything that keeps a shopper browsing longer has an outsized effect on that number, because the second item is usually found rather than searched for.</p>
+        <p>Two honest notes. These are published benchmarks from other retailers, not a forecast for your store, and results depend on your traffic, your pricing and where the video sits in your gallery. The link from longer browsing to a bigger basket is well established directionally but harder to attribute cleanly than the conversion figures. What is not in dispute is that motion holds attention longer than stills, and attention is the input everything else on the page depends on.</p>
       </details>
       <details>
-        <summary>How fast is delivery, really?</summary>
-        <p>48 hours on the 20 product package. 24 hours priority on the 80 product catalog package, delivered as one ZIP named to match your SKUs. The clock starts once we have your product URLs.</p>
+        <summary>What would it cost to produce this myself?</summary>
+        <p>Video is priced very differently from stills. A studio product video runs $2,000 to $10,000 per SKU. Batched production brings that to $200 to $800. The cheapest route in the industry, template-based asset swapping at high volume, still lands at $80 to $150 per SKU.</p>
+        <p>Scale is why most catalogs do not have it. One industry breakdown puts it plainly: shooting dedicated video for 500 SKUs at $3,000 each is a $1.5 million commitment. So brands cover their top sellers and leave everything else static.</p>
+        <p>Yeltis is $14.97 per garment on a catalog build, and it works from photography you already own. Nothing ships, nothing gets scheduled, and no one has to be available in October.</p>
       </details>
       <details>
-        <summary>What does "category-tailored motion" actually mean?</summary>
-        <p>For products that sit still, the background moves in a way that suits what the thing is. Rolling mist behind skincare, rising steam off coffee, sunlit orchard light behind an olive oil. For apparel it means something different: the garment itself moves, through a full model turnaround, so a shopper can see how it sits, how the hem falls and how much it moves.</p>
+        <summary>What happens if a drop is bigger than my tier?</summary>
+        <p>Extra garments are billed at $35 each, so an unusually big month never blocks a launch or forces an upgrade mid-cycle. If it keeps happening you can move up a tier, and you can change tiers once a quarter in either direction with no penalty.</p>
       </details>
       <details>
-        <summary>Why is everything 4:5?</summary>
-        <p>4:5 vertical at 1080 x 1350 px is the ratio Shopify's product media gallery is built around, and it is the shape that fills a phone screen without wasting it. A 16:9 clip loses most of the height on mobile and a square clip loses some of it. Formatting every video to 4:5 means the file drops into your gallery and sits at the same size as your existing product images, with no cropping, no letterboxing and no theme surgery.</p>
+        <summary>What format do the files come in?</summary>
+        <p>Whatever your theme uses. Shopify does not enforce a single format across themes, and the shape your product gallery expects depends on which one you run and how it is configured. Themes like Dawn, Refresh and Sense let you choose, while others default to square and crop anything that is not.</p><p>So we check your store before we render, and cut every file to match. That way it sits at exactly the same size as the product images already in your gallery, with no cropping, no letterboxing and no theme surgery on your end. Vertical either way, because that is what fills a phone screen, and most of your traffic is on one.</p>
       </details>
       <details>
         <summary>Does it work with my theme?</summary>
-        <p>Shopify supports MP4 in native product media on every modern theme. The files upload under Products &gt; Media in your admin, the same place your images already live. Nothing to install and nothing to configure.</p>
+        <p>Shopify supports MP4 in native product media on every modern theme. The files upload under Products &gt; Media in your admin, the same place your images already live. Nothing to install and nothing to configure, and we never need access to your store.</p>
       </details>
       <details>
-        <summary>What if the first one is not right?</summary>
-        <p>Start with the free render. Pick one product, we build the loop, and you decide from there. If it does not earn a place on the page there is nothing owed and nothing to cancel.</p>
+        <summary>What if the first month is not worth it?</summary>
+        <p>On the 20 garment plan we refund it. No form, no retention call, no explanation required. That is why we suggest starting there if you want the guarantee: prove it on 20 pieces, then move up a tier once you have seen what it does. Before any of that you get a free render on one of your own garments, so you will have seen the work on your own product before you spend anything.</p>
       </details>
     </div>
   </div>
@@ -761,10 +866,31 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
 <section class="closer" id="start">
   <div class="wrap">
     <span class="eyebrow">Start here</span>
-    <h2 style="margin-top:18px">Pick one product. We will render it free.</h2>
-    <p class="lead">Send one product URL and we will build a 4:5 loop for it at no cost, with no call required. Nothing to ship. If it earns a place on the page, the other 19 are $499 and the whole catalog is $1,299.</p>
-    <a class="btn btn-primary" href="mailto:ken@goyeltis.com?subject=Free%20sample%20render&amp;body=Product%20URL%3A%20">Send a product URL</a>
-    <p class="tiny" style="margin-top:20px">No account, no card, no obligation.</p>
+    <h2 style="margin-top:18px">Pick one garment. We will render it free.</h2>
+    <p class="lead">Paste one product link and we will put that garment on a model at no cost. No call, nothing to ship, no card. If it earns a place on your page, the catalog build is $1,497 and drops start at $497 a month.</p>
+
+    <form class="sform" id="sampleForm" novalidate>
+      <div class="sform-row">
+        <label for="sfName">Your name</label>
+        <input type="text" id="sfName" name="name" autocomplete="name" required placeholder="Jane Okafor">
+      </div>
+      <div class="sform-row">
+        <label for="sfEmail">Email for delivery</label>
+        <input type="email" id="sfEmail" name="email" autocomplete="email" required placeholder="jane@yourstore.com">
+      </div>
+      <div class="sform-row">
+        <label for="sfUrl">Product page link</label>
+        <input type="url" id="sfUrl" name="product_url" required placeholder="https://yourstore.com/products/...">
+      </div>
+      <div class="sform-hp" aria-hidden="true">
+        <label for="sfCompany">Company</label>
+        <input type="text" id="sfCompany" name="_gotcha" tabindex="-1" autocomplete="off">
+      </div>
+      <button type="submit" class="btn btn-primary" id="sfSubmit">Send my product link</button>
+      <p class="sform-note">We reply with the finished render, usually within 48 hours.<br>No account, no card, no obligation.</p>
+    </form>
+
+    <div class="sform-msg" id="sfMsg" role="status" aria-live="polite"></div>
   </div>
 </section>
 
@@ -786,6 +912,8 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
         <a href="#samples">Samples</a>
         <a href="#pricing">Pricing</a>
         <a href="#start">Free sample render</a>
+        <a href="/terms.html">Terms</a>
+        <a href="/privacy.html">Privacy</a>
         <a href="mailto:ken@goyeltis.com">ken@goyeltis.com</a>
       </div>
     </div>
@@ -825,26 +953,6 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
       });
     });
   }
-
-  /* ---------- Package type tabs ---------- */
-  var ptabs = document.querySelectorAll('.ptabs [role="tab"]');
-  function selectTab(tab){
-    ptabs.forEach(function(t){
-      var on = t === tab;
-      t.setAttribute("aria-selected", String(on));
-      var panel = document.getElementById(t.getAttribute("aria-controls"));
-      if (panel) panel.hidden = !on;
-    });
-  }
-  ptabs.forEach(function(tab, i){
-    tab.addEventListener("click", function(){ selectTab(tab); });
-    tab.addEventListener("keydown", function(e){
-      var next = null;
-      if (e.key === "ArrowRight") next = ptabs[(i + 1) % ptabs.length];
-      if (e.key === "ArrowLeft")  next = ptabs[(i - 1 + ptabs.length) % ptabs.length];
-      if (next) { e.preventDefault(); next.focus(); selectTab(next); }
-    });
-  });
 
   /* ---------- Count up the proof band once, on first view ---------- */
   var band = document.getElementById("stats");
@@ -905,6 +1013,61 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
       status.textContent = n + (n === 1 ? " clip loaded" : " clips loaded") +
         ". Reload the page to go back to the samples.";
       if (files.length > 6) status.textContent += " Only the first 6 were used.";
+    });
+  }
+
+
+  /* ---------- Free sample request form ----------
+     Posts to Formspree, which forwards to FALLBACK_EMAIL. If the endpoint ever
+     stops working, the visitor is told to email that address directly rather
+     than being left at a dead button. To move providers, change FORM_ENDPOINT. */
+  var FORM_ENDPOINT = "https://formspree.io/f/xqpzlzqp";
+  var FALLBACK_EMAIL = "ken@goyeltis.com";
+
+  var sform = document.getElementById("sampleForm");
+  if (sform) {
+    var sfMsg = document.getElementById("sfMsg");
+    var sfBtn = document.getElementById("sfSubmit");
+
+    var say = function(text, kind){
+      sfMsg.textContent = text;
+      sfMsg.className = "sform-msg show " + kind;
+    };
+
+    sform.addEventListener("submit", function(e){
+      e.preventDefault();
+      if (!sform.checkValidity()) { sform.reportValidity(); return; }
+
+      var name = document.getElementById("sfName").value.trim();
+      var email = document.getElementById("sfEmail").value.trim();
+      var url = document.getElementById("sfUrl").value.trim();
+      if (document.getElementById("sfCompany").value) return;   // honeypot
+
+      var done = function(){
+        sform.classList.add("sent");
+        say("Got it, " + name.split(" ")[0] + ". We will send the finished render to " +
+            email + ", usually within 48 hours.", "ok");
+      };
+
+      sfBtn.disabled = true;
+      sfBtn.textContent = "Sending...";
+
+      fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name, email: email, product_url: url,
+          _subject: "Free sample render request from " + name
+        })
+      }).then(function(r){
+        if (r.ok) { done(); }
+        else { throw new Error("bad response"); }
+      }).catch(function(){
+        sfBtn.disabled = false;
+        sfBtn.textContent = "Send my product link";
+        say("That did not go through. Email " + FALLBACK_EMAIL +
+            " with your product link and we will pick it up from there.", "err");
+      });
     });
   }
 
