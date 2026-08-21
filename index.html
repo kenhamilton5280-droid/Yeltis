@@ -252,6 +252,26 @@ p{margin:0}
   border:1px solid var(--line);box-shadow:var(--shadow-sm);
 }
 .clip video{aspect-ratio:4/5;width:100%;height:100%;object-fit:cover}
+/* hover affordance: a still card has to say it will move */
+.clip.is-hoverable{cursor:pointer}
+.clip.is-hoverable::after{
+  content:"";position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:linear-gradient(180deg,rgba(7,27,51,.28),rgba(7,27,51,.05) 45%,rgba(7,27,51,.35));
+  opacity:1;transition:opacity .28s ease;
+}
+.clip.is-hoverable:hover::after,.clip.is-hoverable:focus-visible::after{opacity:0}
+.clip-cue{
+  position:absolute;z-index:3;left:50%;top:50%;transform:translate(-50%,-50%);
+  display:flex;align-items:center;gap:9px;padding:9px 15px 9px 12px;border-radius:40px;
+  background:rgba(7,27,51,.74);backdrop-filter:blur(8px);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--white);white-space:nowrap;pointer-events:none;
+  transition:opacity .24s ease,transform .24s ease;
+}
+.clip-cue svg{width:13px;height:13px;flex:none}
+.clip.is-hoverable:hover .clip-cue,.clip.is-hoverable:focus-visible .clip-cue{opacity:0;transform:translate(-50%,-50%) scale(.9)}
+.clip:not(.is-hoverable) .clip-cue{display:none}
+.clip.is-hoverable:focus-visible{outline:2.5px solid var(--sky);outline-offset:3px}
 .clip-meta{
   position:absolute;left:12px;bottom:12px;right:12px;display:flex;justify-content:space-between;gap:8px;
   font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--sky-soft);
@@ -590,27 +610,33 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
 
     <div class="reel" id="reel">
       <div class="clip">
-        <video data-slot="1" src="loop-cotton-island.mp4" poster="loop-cotton-island.jpg" muted loop playsinline autoplay preload="none" aria-label="Maxi dress model turnaround render"></video>
+        <video data-slot="1" src="loop-cotton-island.mp4" poster="loop-cotton-island.jpg" muted loop playsinline preload="metadata" aria-label="Maxi dress model turnaround render"></video>
+        <span class="clip-cue"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.2v9.6l8-4.8z" fill="currentColor"/></svg>Hover to play</span>
         <div class="clip-meta"><span>Maxi dress</span><span>9.8s</span></div>
       </div>
       <div class="clip">
-        <video data-slot="2" src="loop-roxanne.mp4" poster="loop-roxanne.jpg" muted loop playsinline autoplay preload="none" aria-label="Midi dress model turnaround render"></video>
+        <video data-slot="2" src="loop-roxanne.mp4" poster="loop-roxanne.jpg" muted loop playsinline preload="metadata" aria-label="Midi dress model turnaround render"></video>
+        <span class="clip-cue"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.2v9.6l8-4.8z" fill="currentColor"/></svg>Hover to play</span>
         <div class="clip-meta"><span>Midi dress</span><span>8.0s</span></div>
       </div>
       <div class="clip">
-        <video data-slot="3" src="loop-mini.mp4" poster="loop-mini.jpg" muted loop playsinline autoplay preload="none" aria-label="Mini dress model turnaround render"></video>
+        <video data-slot="3" src="loop-mini.mp4" poster="loop-mini.jpg" muted loop playsinline preload="metadata" aria-label="Mini dress model turnaround render"></video>
+        <span class="clip-cue"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.2v9.6l8-4.8z" fill="currentColor"/></svg>Hover to play</span>
         <div class="clip-meta"><span>Mini dress</span><span>10.0s</span></div>
       </div>
       <div class="clip">
-        <video data-slot="4" src="loop-floral.mp4" poster="loop-floral.jpg" muted loop playsinline autoplay preload="none" aria-label="Mini dress model turnaround render"></video>
+        <video data-slot="4" src="loop-floral.mp4" poster="loop-floral.jpg" muted loop playsinline preload="metadata" aria-label="Mini dress model turnaround render"></video>
+        <span class="clip-cue"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.2v9.6l8-4.8z" fill="currentColor"/></svg>Hover to play</span>
         <div class="clip-meta"><span>Mini dress</span><span>10.0s</span></div>
       </div>
       <div class="clip">
-        <video data-slot="5" src="loop-model.mp4" poster="loop-model.jpg" muted loop playsinline autoplay preload="none" aria-label="Blouse model turnaround render"></video>
+        <video data-slot="5" src="loop-model.mp4" poster="loop-model.jpg" muted loop playsinline preload="metadata" aria-label="Blouse model turnaround render"></video>
+        <span class="clip-cue"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.2v9.6l8-4.8z" fill="currentColor"/></svg>Hover to play</span>
         <div class="clip-meta"><span>Blouse</span><span>10.0s</span></div>
       </div>
       <div class="clip">
-        <video data-slot="6" src="loop-jacket.mp4" poster="loop-jacket.jpg" muted loop playsinline autoplay preload="none" aria-label="Denim jacket model turnaround render"></video>
+        <video data-slot="6" src="loop-jacket.mp4" poster="loop-jacket.jpg" muted loop playsinline preload="metadata" aria-label="Denim jacket model turnaround render"></video>
+        <span class="clip-cue"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 1.2v9.6l8-4.8z" fill="currentColor"/></svg>Hover to play</span>
         <div class="clip-meta"><span>Denim jacket</span><span>10.0s</span></div>
       </div>
     </div>
@@ -1071,12 +1097,49 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
     });
   }
 
-  /* ---------- Keep autoplay honest on mobile Safari ---------- */
-  document.querySelectorAll("video").forEach(function(v){
+  /* ---------- Hero: keep autoplay honest on mobile Safari ----------
+     Scoped to the hero only. The reel is hover-driven below.            */
+  document.querySelectorAll('.stage video').forEach(function(v){
     v.addEventListener("canplay", function(){
       var p = v.play(); if (p && p.catch) p.catch(function(){});
     }, { once: true });
   });
+
+  /* ---------- Reel: play on hover, or on scroll where there is no hover ----------
+     Desktop gets hover-to-play so six clips are not competing for attention.
+     Touch devices have no hover at all, so they fall back to playing the
+     clip that is currently on screen. Never both.                        */
+  var reelVideos = Array.prototype.slice.call(document.querySelectorAll('.clip video'));
+  var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  var play = function(v){ var p = v.play(); if (p && p.catch) p.catch(function(){}); };
+  var stop = function(v){ v.pause(); try { v.currentTime = 0; } catch(e){} };
+
+  if (reelVideos.length) {
+    if (canHover) {
+      reelVideos.forEach(function(v){
+        var card = v.closest('.clip');
+        card.classList.add('is-hoverable');
+        card.addEventListener('mouseenter', function(){ play(v); });
+        card.addEventListener('mouseleave', function(){ stop(v); });
+        /* keyboard users get the same thing on focus */
+        card.setAttribute('tabindex','0');
+        card.addEventListener('focus', function(){ play(v); });
+        card.addEventListener('blur', function(){ stop(v); });
+        /* and a tap still works on a hybrid touchscreen laptop */
+        card.addEventListener('click', function(){ v.paused ? play(v) : stop(v); });
+      });
+    } else if ('IntersectionObserver' in window) {
+      var io2 = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting) { play(e.target); } else { e.target.pause(); }
+        });
+      }, { threshold: 0.6 });
+      reelVideos.forEach(function(v){ io2.observe(v); });
+    } else {
+      reelVideos.forEach(play);
+    }
+  }
 })();
 </script>
 </body>
