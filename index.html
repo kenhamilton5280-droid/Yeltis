@@ -111,31 +111,6 @@ p{margin:0}
 .tint{background:var(--paper)}
 
 /* ============================================================
-   FREE SAMPLE FORM
-   ============================================================ */
-.sform{max-width:520px;margin:34px auto 0;text-align:left}
-.sform-row{margin-bottom:16px}
-.sform label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.13em;
-  text-transform:uppercase;color:var(--body);margin-bottom:7px}
-.sform input{
-  width:100%;padding:14px 16px;font-family:var(--text);font-size:16px;color:var(--ink);
-  background:var(--white);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .16s,box-shadow .16s;
-}
-.sform input::placeholder{color:#9DB3CC}
-.sform input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(22,99,216,.13)}
-.sform input:user-invalid{border-color:#C0392B}
-.sform .btn{width:100%;margin-top:6px}
-.sform-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
-.sform-note{margin-top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.04em;
-  color:#7E97B4;text-align:center;line-height:1.7}
-.sform-msg{margin-top:16px;padding:14px 16px;border-radius:10px;font-size:15px;line-height:1.55;display:none}
-.sform-msg.show{display:block}
-.sform-msg.ok{background:var(--mist);border:1px solid var(--sky);color:var(--ink)}
-.sform-msg.err{background:#FDF0EE;border:1px solid #E8B4AE;color:#8C2E20}
-.sform.sent .sform-row,.sform.sent .btn,.sform.sent .sform-note{display:none}
-
-/* ============================================================
    NAV
    ============================================================ */
 .nav{
@@ -339,8 +314,6 @@ code{font-family:var(--mono);font-size:12.5px;background:var(--mist);padding:2px
 .ptabs .ptab-sub{font-family:var(--mono);font-size:10px;letter-spacing:.09em;opacity:.7;text-transform:uppercase}
 @media(max-width:520px){.ptabs{width:100%}.ptabs button{flex:1;justify-content:center;padding:11px 10px;font-size:13.5px}.ptabs .ptab-sub{display:none}}
 [role="tabpanel"][hidden]{display:none}
-.tier-alt{display:block;text-align:center;margin-top:11px;font-size:13.5px;color:var(--body);text-decoration:none;border-bottom:1px solid transparent}
-.tier-alt:hover{color:var(--blue);border-color:var(--sky)}
 .tier-rate{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--blue);margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
 .tier-save{display:inline-block;margin-left:8px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--blue-deep);background:var(--mist);padding:3px 8px;border-radius:20px;vertical-align:middle}
 
@@ -626,7 +599,7 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
       <div class="step">
         <div class="step-n">Step 02</div>
         <h3>We build the loop</h3>
-        <p>Each SKU gets its own 1080p render, formatted to 4:5 at 1080 x 1350 px so it is compatible with the Shopify gallery out of the box. Product SKUs get ambient scene motion chosen for the category. Garments get a full model turnaround so fit and drape read on camera. Back in 48 hours on the 20 pack, or 4 business days for a full catalog.</p>
+        <p>Each SKU gets its own 1080p render, formatted to 4:5 at 1080 x 1350 px so it is compatible with the Shopify gallery out of the box, Product SKUs get ambient scene motion chosen for the category. Garments get a full model turnaround so fit and drape read on camera. Back in 48 hours, or 24 on the catalog package.</p>
       </div>
       <div class="step">
         <div class="step-n">Step 03</div>
@@ -643,7 +616,7 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
       <div class="spec-row"><div class="spec-k">Frame 0</div><div class="spec-v">Opens at full brightness. No fade up, no dark first frame when the gallery paints</div></div>
       <div class="spec-row"><div class="spec-k">Audio</div><div class="spec-v">None. Product page media autoplays muted, so a soundtrack is dead weight</div></div>
       <div class="spec-row"><div class="spec-k">File</div><div class="spec-v">Standard H.264 MP4 under 1 MB per clip, with faststart enabled so the gallery paints immediately. Uploads directly under Products &gt; Media in Shopify admin</div></div>
-      <div class="spec-row"><div class="spec-k">Turnaround</div><div class="spec-v">48 hours on either 20 pack. 4 business days on either 80 pack, delivered as one ZIP</div></div>
+      <div class="spec-row"><div class="spec-k">Turnaround</div><div class="spec-v">48 hours on the 20 pack, 24 hours priority on the 80 pack</div></div>
       <div class="spec-row"><div class="spec-k">Shipping</div><div class="spec-v">None. Zero physical product required at any stage</div></div>
       </div>
   </div>
@@ -680,8 +653,7 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
           <li>48 hour delivery, zero physical shipping</li>
         </ul>
         <div class="tier-rate">$25.00 PER SKU</div>
-        <a class="btn btn-ghost" href="https://buy.stripe.com/28E3cveTk5fs4Kw3tbebu03" style="margin-top:22px">Start the 20 pack</a>
-        <a class="tier-alt" href="#start">or get one rendered free first</a>
+        <a class="btn btn-ghost" href="#start" style="margin-top:22px">Start the 20 pack</a>
       </div>
       <div class="tier feature">
         <span class="tier-flag">Best value</span>
@@ -693,11 +665,10 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
           <li>Category-tailored motion plus custom background scene options on every SKU</li>
           <li>Instant full-brightness frame 0</li>
           <li>Standard H.264 MP4, ready for Products &gt; Media</li>
-          <li>4 business day turnaround, bulk ZIP delivery</li>
+          <li>Priority 24 hour turnaround, bulk ZIP delivery</li>
         </ul>
         <div class="tier-rate">$16.23 PER SKU</div>
-        <a class="btn btn-primary" href="https://buy.stripe.com/dRm7sL3aC23gdh26Fnebu02" style="margin-top:22px">Do the whole catalog</a>
-        <a class="tier-alt" href="#start">or get one rendered free first</a>
+        <a class="btn btn-primary" href="#start" style="margin-top:22px">Do the whole catalog</a>
       </div>
     </div>
 
@@ -715,8 +686,7 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
           <li>48 hour delivery, zero physical shipping</li>
         </ul>
         <div class="tier-rate">$29.95 PER SKU</div>
-        <a class="btn btn-ghost" href="https://buy.stripe.com/9B69AT7qS37k7WI1l3ebu01" style="margin-top:22px">Start the 20 pack</a>
-        <a class="tier-alt" href="#start">or get one rendered free first</a>
+        <a class="btn btn-ghost" href="#start" style="margin-top:22px">Start the 20 pack</a>
       </div>
       <div class="tier feature">
         <span class="tier-flag">Best value</span>
@@ -730,11 +700,10 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
           <li>Colourway variants of the same garment priced as one SKU</li>
           <li>Instant full-brightness frame 0</li>
           <li>Standard H.264 MP4, ready for Products &gt; Media</li>
-          <li>4 business day turnaround, bulk ZIP delivery</li>
+          <li>Priority 24 hour turnaround, bulk ZIP delivery</li>
         </ul>
         <div class="tier-rate">$19.49 PER SKU</div>
-        <a class="btn btn-primary" href="https://buy.stripe.com/dRm7sL8uWbDQgtee7Pebu00" style="margin-top:22px">Do the whole catalog</a>
-        <a class="tier-alt" href="#start">or get one rendered free first</a>
+        <a class="btn btn-primary" href="#start" style="margin-top:22px">Do the whole catalog</a>
       </div>
     </div>
 
@@ -766,7 +735,7 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
       </details>
       <details>
         <summary>How fast is delivery, really?</summary>
-        <p>48 hours on either 20 pack. 4 business days on either 80 pack, delivered as one ZIP named to match your SKUs. A full catalog is four times the work, so it takes longer than the small pack rather than less. The clock starts once we have your product URLs.</p>
+        <p>48 hours on the 20 product package. 24 hours priority on the 80 product catalog package, delivered as one ZIP named to match your SKUs. The clock starts once we have your product URLs.</p>
       </details>
       <details>
         <summary>What does "category-tailored motion" actually mean?</summary>
@@ -793,30 +762,9 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
   <div class="wrap">
     <span class="eyebrow">Start here</span>
     <h2 style="margin-top:18px">Pick one product. We will render it free.</h2>
-    <p class="lead">Paste one product URL and we will build a 4:5 loop for it at no cost. No call, nothing to ship, no card. If it earns a place on your page, the other 19 are $499 and the whole catalog is $1,299.</p>
-
-    <form class="sform" id="sampleForm" novalidate>
-      <div class="sform-row">
-        <label for="sfName">Your name</label>
-        <input type="text" id="sfName" name="name" autocomplete="name" required placeholder="Jane Okafor">
-      </div>
-      <div class="sform-row">
-        <label for="sfEmail">Email for delivery</label>
-        <input type="email" id="sfEmail" name="email" autocomplete="email" required placeholder="jane@yourstore.com">
-      </div>
-      <div class="sform-row">
-        <label for="sfUrl">Product page URL</label>
-        <input type="url" id="sfUrl" name="product_url" required placeholder="https://yourstore.com/products/...">
-      </div>
-      <div class="sform-hp" aria-hidden="true">
-        <label for="sfCompany">Company</label>
-        <input type="text" id="sfCompany" name="_gotcha" tabindex="-1" autocomplete="off">
-      </div>
-      <button type="submit" class="btn btn-primary" id="sfSubmit">Send my product URL</button>
-      <p class="sform-note">We reply with the finished render, usually within 48 hours.<br>No account, no card, no obligation.</p>
-    </form>
-
-    <div class="sform-msg" id="sfMsg" role="status" aria-live="polite"></div>
+    <p class="lead">Send one product URL and we will build a 4:5 loop for it at no cost, with no call required. Nothing to ship. If it earns a place on the page, the other 19 are $499 and the whole catalog is $1,299.</p>
+    <a class="btn btn-primary" href="mailto:ken@goyeltis.com?subject=Free%20sample%20render&amp;body=Product%20URL%3A%20">Send a product URL</a>
+    <p class="tiny" style="margin-top:20px">No account, no card, no obligation.</p>
   </div>
 </section>
 
@@ -957,61 +905,6 @@ details p{padding:0 0 22px;color:var(--body);font-size:16px;max-width:70ch}
       status.textContent = n + (n === 1 ? " clip loaded" : " clips loaded") +
         ". Reload the page to go back to the samples.";
       if (files.length > 6) status.textContent += " Only the first 6 were used.";
-    });
-  }
-
-
-  /* ---------- Free sample request form ----------
-     Posts to Formspree, which forwards to FALLBACK_EMAIL. If the endpoint ever
-     stops working, the visitor is told to email that address directly rather
-     than being left at a dead button. To move providers, change FORM_ENDPOINT. */
-  var FORM_ENDPOINT = "https://formspree.io/f/xqpzlzqp";
-  var FALLBACK_EMAIL = "ken@goyeltis.com";
-
-  var sform = document.getElementById("sampleForm");
-  if (sform) {
-    var sfMsg = document.getElementById("sfMsg");
-    var sfBtn = document.getElementById("sfSubmit");
-
-    var say = function(text, kind){
-      sfMsg.textContent = text;
-      sfMsg.className = "sform-msg show " + kind;
-    };
-
-    sform.addEventListener("submit", function(e){
-      e.preventDefault();
-      if (!sform.checkValidity()) { sform.reportValidity(); return; }
-
-      var name = document.getElementById("sfName").value.trim();
-      var email = document.getElementById("sfEmail").value.trim();
-      var url = document.getElementById("sfUrl").value.trim();
-      if (document.getElementById("sfCompany").value) return;   // honeypot
-
-      var done = function(){
-        sform.classList.add("sent");
-        say("Got it, " + name.split(" ")[0] + ". We will send the finished render to " +
-            email + ", usually within 48 hours.", "ok");
-      };
-
-      sfBtn.disabled = true;
-      sfBtn.textContent = "Sending...";
-
-      fetch(FORM_ENDPOINT, {
-        method: "POST",
-        headers: { "Accept": "application/json", "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name, email: email, product_url: url,
-          _subject: "Free sample render request from " + name
-        })
-      }).then(function(r){
-        if (r.ok) { done(); }
-        else { throw new Error("bad response"); }
-      }).catch(function(){
-        sfBtn.disabled = false;
-        sfBtn.textContent = "Send my product URL";
-        say("That did not go through. Email " + FALLBACK_EMAIL +
-            " with your product URL and we will pick it up from there.", "err");
-      });
     });
   }
 
